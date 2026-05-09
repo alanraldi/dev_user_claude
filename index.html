@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>π — A Constante Pi</title>
+  <style>
+    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #07080f;
+      color: #e8e8f0;
+      font-family: 'Georgia', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 30px 16px 50px;
+      overflow-x: hidden;
+    }
+
+    /* Stars background */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image:
+        radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 30% 60%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 55% 25%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 75% 80%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 90% 40%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 20% 85%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 65% 55%, #fff 0%, transparent 100%),
+        radial-gradient(1px 1px at 45% 90%, #fff 0%, transparent 100%);
+      opacity: 0.4;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .content { position: relative; z-index: 1; width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; }
+
+    header { text-align: center; margin-bottom: 28px; }
+
+    .pi-symbol {
+      font-size: 6rem;
+      line-height: 1;
+      color: #f5a623;
+      text-shadow: 0 0 40px rgba(245,166,35,0.6), 0 0 80px rgba(245,166,35,0.3);
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { text-shadow: 0 0 40px rgba(245,166,35,0.6), 0 0 80px rgba(245,166,35,0.3); }
+      50%       { text-shadow: 0 0 60px rgba(245,166,35,0.9), 0 0 120px rgba(245,166,35,0.5); }
+    }
+
+    header h2 {
+      font-size: 1.1rem;
+      color: #8899bb;
+      font-weight: normal;
+      margin-top: 6px;
+      letter-spacing: 1px;
+    }
+
+    /* Canvas wrapper */
+    .canvas-wrap {
+      width: 100%;
+      background: #0d1020;
+      border: 1px solid #1e2540;
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 0 40px rgba(79,195,247,0.08);
+    }
+
+    canvas { display: block; width: 100%; border-radius: 8px; }
+
+    /* Info bar */
+    .info-bar {
+      display: flex;
+      gap: 24px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .badge {
+      background: #111828;
+      border: 1px solid #2a3550;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-size: 0.9rem;
+      color: #aac4f0;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+    .badge strong { color: #f5a623; font-size: 1rem; }
+
+    /* Formula */
+    .formula-box {
+      margin-top: 28px;
+      background: #0d1020;
+      border: 1px solid #1e2540;
+      border-radius: 12px;
+      padding: 20px 30px;
+      text-align: center;
+      width: 100%;
+    }
+    .formula-box h3 { color: #8899bb; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .formula {
+      font-size: 1.6rem;
+      color: #e8e8f0;
+      letter-spacing: 2px;
+    }
+    .formula .pi { color: #f5a623; font-size: 1.9rem; }
+    .formula .highlight { color: #4fc3f7; }
+
+    /* Explanation */
+    .explanation {
+      margin-top: 20px;
+      color: #8899bb;
+      text-align: center;
+      line-height: 1.8;
+      font-size: 0.95rem;
+      max-width: 620px;
+    }
+    .explanation strong { color: #f5a623; }
+
+    /* Button */
+    .btn {
+      margin-top: 22px;
+      background: transparent;
+      border: 2px solid #f5a623;
+      color: #f5a623;
+      padding: 10px 34px;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-family: 'Georgia', serif;
+      cursor: pointer;
+      letter-spacing: 1px;
+      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover {
+      background: #f5a623;
+      color: #07080f;
+      box-shadow: 0 0 20px rgba(245,166,35,0.4);
+    }
+
+    /* Digits */
+    .digits-box {
+      margin-top: 28px;
+      background: #0d1020;
+      border: 1px solid #1e2540;
+      border-radius: 12px;
+      padding: 20px 24px;
+      width: 100%;
+      text-align: center;
+    }
+    .digits-box h3 { color: #8899bb; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .digits {
+      font-size: 1rem;
+      color: #4aaa88;
+      letter-spacing: 3px;
+      line-height: 2;
+      word-break: break-all;
+    }
+    .digits .d-pi { color: #f5a623; font-size: 1.3rem; font-weight: bold; }
+    .digits .d-3  { color: #e8e8f0; }
+
+    footer {
+      margin-top: 40px;
+      color: #334;
+      font-size: 0.8rem;
+      letter-spacing: 1px;
+    }
+  </style>
+</head>
+<body>
+<div class="content">
+
+  <header>
+    <div class="pi-symbol">π</div>
+    <h2>A constante que conecta o círculo ao infinito</h2>
+  </header>
+
+  <div class="canvas-wrap">
+    <canvas id="c"></canvas>
+    <div class="info-bar">
+      <div class="badge">Rotação <strong id="rot">0°</strong></div>
+      <div class="badge">Distância <strong id="dist">0</strong></div>
+      <div class="badge">π × d <strong id="pid">≈ 0</strong></div>
+    </div>
+  </div>
+
+  <div class="formula-box">
+    <h3>Relação fundamental</h3>
+    <div class="formula">
+      C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span><span class="highlight">r</span>
+    </div>
+  </div>
+
+  <p class="explanation">
+    Ao rolar sobre uma linha plana, um círculo percorre exatamente
+    <strong>π × diâmetro</strong> em uma volta completa (360°).
+    O ponto vermelho traça uma <strong>cicloide</strong> — a curva que
+    prova geometricamente o valor de <strong>π ≈ 3.14159...</strong>
+  </p>
+
+  <button class="btn" onclick="restart()">↺ Repetir animação</button>
+
+  <div class="digits-box">
+    <h3>Primeiros dígitos de π</h3>
+    <div class="digits">
+      <span class="d-pi">π</span> = <span class="d-3">3</span>.14159&nbsp;26535&nbsp;89793&nbsp;23846&nbsp;26433&nbsp;83279&nbsp;50288&nbsp;41971&nbsp;69399&nbsp;37510...
+    </div>
+  </div>
+
+  <footer>π é irracional e transcendente — seus dígitos nunca se repetem nem terminam.</footer>
+
+</div>
+
+<script>
+  const canvas = document.getElementById('c');
+  const ctx    = canvas.getContext('2d');
+
+  // Logical dimensions
+  const LW = 720, LH = 300;
+  canvas.width  = LW;
+  canvas.height = LH;
+
+  const R       = 72;
+  const GROUND  = LH - 48;
+  const START_X = R + 44;
+  const FULL    = 2 * Math.PI;        // one rotation
+  const DIST    = FULL * R;           // π × diameter
+  const SPEED   = 0.018;
+
+  let angle = 0;
+  let trail = [];
+  let rafId;
+  let done  = false;
+
+  // ── helpers ──────────────────────────────────────────────
+  function cx()  { return START_X + angle * R; }
+  function cy()  { return GROUND - R; }
+  function dotX(){ return cx() + R * Math.sin(angle); }
+  function dotY(){ return cy() - R * Math.cos(angle); }
+
+  function lerp(a, b, t) { return a + (b - a) * Math.clamp01(t); }
+  Math.clamp01 = t => Math.max(0, Math.min(1, t));
+
+  // ── draw ─────────────────────────────────────────────────
+  function draw() {
+    ctx.clearRect(0, 0, LW, LH);
+
+    // grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+    ctx.lineWidth = 1;
+    for (let x = 0; x < LW; x += 36) {
+      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, LH); ctx.stroke();
+    }
+    for (let y = 0; y < LH; y += 36) {
+      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(LW, y); ctx.stroke();
+    }
+
+    // ground
+    ctx.strokeStyle = '#253050';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(LW, GROUND); ctx.stroke();
+
+    // ── pi×d reference line (fades in after 30% rotation) ──
+    const lineAlpha = Math.clamp01((angle / FULL - 0.3) / 0.4);
+    if (lineAlpha > 0) {
+      // dashed orange line
+      ctx.save();
+      ctx.globalAlpha = lineAlpha * 0.65;
+      ctx.strokeStyle = '#f5a623';
+      ctx.lineWidth = 2.5;
+      ctx.setLineDash([10, 5]);
+      ctx.beginPath();
+      ctx.moveTo(START_X - R, GROUND - 12);
+      ctx.lineTo(START_X - R + DIST, GROUND - 12);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.restore();
+
+      // arrows at ends
+      if (lineAlpha > 0.6) {
+        ctx.save();
+        ctx.globalAlpha = Math.clamp01((lineAlpha - 0.6) / 0.4);
+        ctx.fillStyle = '#f5a623';
+        ctx.font = 'bold 13px Georgia';
+        ctx.textAlign = 'center';
+        ctx.fillText('← π × diâmetro →', START_X - R + DIST / 2, GROUND - 20);
+        ctx.restore();
+      }
+    }
+
+    // diameter reference below ground
+    ctx.save();
+    ctx.strokeStyle = 'rgba(79,195,247,0.4)';
+    ctx.lineWidth = 1.5;
+    ctx.setLineDash([5, 4]);
+    ctx.beginPath();
+    ctx.moveTo(START_X - R, GROUND + 14);
+    ctx.lineTo(START_X + R, GROUND + 14);
+    ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle = 'rgba(79,195,247,0.55)';
+    ctx.font = '11px Georgia';
+    ctx.textAlign = 'center';
+    ctx.fillText('d = 2r', START_X, GROUND + 26);
+    ctx.restore();
+
+    // ── cycloid trail ──
+    if (trail.length > 1) {
+      ctx.beginPath();
+      ctx.moveTo(trail[0].x, trail[0].y);
+      for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
+      ctx.strokeStyle = 'rgba(255,80,100,0.75)';
+      ctx.lineWidth = 2;
+      ctx.lineJoin = 'round';
+      ctx.stroke();
+    }
+
+    // ── circle ──
+    // glow
+    const grd = ctx.createRadialGradient(cx(), cy(), R * 0.6, cx(), cy(), R * 1.4);
+    grd.addColorStop(0, 'rgba(79,195,247,0)');
+    grd.addColorStop(1, 'rgba(79,195,247,0.06)');
+    ctx.beginPath(); ctx.arc(cx(), cy(), R * 1.4, 0, FULL);
+    ctx.fillStyle = grd; ctx.fill();
+
+    ctx.beginPath(); ctx.arc(cx(), cy(), R, 0, FULL);
+    ctx.strokeStyle = '#4fc3f7'; ctx.lineWidth = 2.5; ctx.stroke();
+    ctx.fillStyle = 'rgba(79,195,247,0.05)'; ctx.fill();
+
+    // tick marks on circle (every 30°)
+    for (let i = 0; i < 12; i++) {
+      const a = (i / 12) * FULL - angle;  // fixed in world space
+      const tx = cx() + Math.cos(a) * R;
+      const ty = cy() + Math.sin(a) * R;
+      const ix = cx() + Math.cos(a) * (R - 8);
+      const iy = cy() + Math.sin(a) * (R - 8);
+      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(ix, iy);
+      ctx.strokeStyle = 'rgba(79,195,247,0.4)'; ctx.lineWidth = 1; ctx.stroke();
+    }
+
+    // radius line
+    ctx.beginPath();
+    ctx.moveTo(cx(), cy());
+    ctx.lineTo(dotX(), dotY());
+    ctx.strokeStyle = '#f5a623'; ctx.lineWidth = 2; ctx.stroke();
+
+    // center
+    ctx.beginPath(); ctx.arc(cx(), cy(), 4, 0, FULL);
+    ctx.fillStyle = '#4fc3f7'; ctx.fill();
+
+    // rolling dot
+    trail.push({ x: dotX(), y: dotY() });
+    ctx.beginPath(); ctx.arc(dotX(), dotY(), 7, 0, FULL);
+    ctx.fillStyle = '#ff5060'; ctx.fill();
+    ctx.beginPath(); ctx.arc(dotX(), dotY(), 3, 0, FULL);
+    ctx.fillStyle = '#fff'; ctx.fill();
+
+    // ── labels ──
+    const pct = Math.min(angle / FULL * 100, 100).toFixed(0);
+    const deg = Math.min(angle / FULL * 360, 360).toFixed(0);
+    document.getElementById('rot').textContent  = deg + '°';
+    document.getElementById('dist').textContent = (angle * R).toFixed(1) + ' px';
+    document.getElementById('pid').textContent  = '≈ ' + DIST.toFixed(1) + ' px';
+
+    // completion banner
+    if (done) {
+      ctx.save();
+      ctx.globalAlpha = 0.92;
+      ctx.fillStyle = 'rgba(7,8,15,0.7)';
+      ctx.fillRect(LW/2 - 210, 12, 420, 44);
+      ctx.fillStyle = '#f5a623';
+      ctx.font = 'bold 16px Georgia';
+      ctx.textAlign = 'center';
+      ctx.fillText('✓ 1 volta completa = π × diâmetro ≈ ' + DIST.toFixed(2) + ' px', LW/2, 40);
+      ctx.restore();
+    }
+  }
+
+  function step() {
+    angle += SPEED;
+    if (angle >= FULL) { angle = FULL; done = true; draw(); return; }
+    draw();
+    rafId = requestAnimationFrame(step);
+  }
+
+  function restart() {
+    cancelAnimationFrame(rafId);
+    angle = 0; trail = []; done = false;
+    rafId = requestAnimationFrame(step);
+  }
+
+  restart();
+</script>
+</body>
+</html>

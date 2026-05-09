@@ -1,401 +1,363 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>π — A Constante Pi</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>π e a Circunferência</title>
   <style>
     *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
     body {
       background: #07080f;
+      font-family: Georgia, serif;
       color: #e8e8f0;
-      font-family: 'Georgia', serif;
       min-height: 100vh;
       display: flex;
       flex-direction: column;
       align-items: center;
-      padding: 30px 16px 50px;
-      overflow-x: hidden;
+      padding: 32px 16px 60px;
     }
-
-    /* Stars background */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image:
-        radial-gradient(1px 1px at 10% 15%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 30% 60%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 55% 25%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 75% 80%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 90% 40%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 20% 85%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 65% 55%, #fff 0%, transparent 100%),
-        radial-gradient(1px 1px at 45% 90%, #fff 0%, transparent 100%);
-      opacity: 0.4;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .content { position: relative; z-index: 1; width: 100%; max-width: 760px; display: flex; flex-direction: column; align-items: center; }
-
-    header { text-align: center; margin-bottom: 28px; }
-
-    .pi-symbol {
-      font-size: 6rem;
-      line-height: 1;
+    h1 {
+      font-size: 5rem;
       color: #f5a623;
-      text-shadow: 0 0 40px rgba(245,166,35,0.6), 0 0 80px rgba(245,166,35,0.3);
-      animation: pulse 3s ease-in-out infinite;
+      text-shadow: 0 0 40px rgba(245,166,35,0.55);
+      line-height: 1;
+      margin-bottom: 6px;
     }
-
-    @keyframes pulse {
-      0%, 100% { text-shadow: 0 0 40px rgba(245,166,35,0.6), 0 0 80px rgba(245,166,35,0.3); }
-      50%       { text-shadow: 0 0 60px rgba(245,166,35,0.9), 0 0 120px rgba(245,166,35,0.5); }
+    .sub {
+      color: #556;
+      font-size: 1rem;
+      letter-spacing: 1.5px;
+      margin-bottom: 28px;
+      text-align: center;
     }
-
-    header h2 {
-      font-size: 1.1rem;
-      color: #8899bb;
-      font-weight: normal;
-      margin-top: 6px;
-      letter-spacing: 1px;
-    }
-
-    /* Canvas wrapper */
-    .canvas-wrap {
-      width: 100%;
+    .card {
       background: #0d1020;
       border: 1px solid #1e2540;
       border-radius: 16px;
-      padding: 16px;
-      box-shadow: 0 0 40px rgba(79,195,247,0.08);
+      padding: 20px;
+      width: 100%;
+      max-width: 760px;
     }
-
-    canvas { display: block; width: 100%; border-radius: 8px; }
-
-    /* Info bar */
-    .info-bar {
-      display: flex;
-      gap: 24px;
+    canvas { display: block; width: 100%; }
+    #lbl {
+      text-align: center;
       margin-top: 14px;
-      flex-wrap: wrap;
-      justify-content: center;
+      min-height: 22px;
+      font-size: 0.95rem;
+      color: #7788aa;
+      letter-spacing: 0.5px;
     }
-
-    .badge {
-      background: #111828;
-      border: 1px solid #2a3550;
-      border-radius: 8px;
-      padding: 8px 18px;
-      font-size: 0.9rem;
-      color: #aac4f0;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-    }
-    .badge strong { color: #f5a623; font-size: 1rem; }
-
-    /* Formula */
-    .formula-box {
-      margin-top: 28px;
+    .formula-card {
+      margin-top: 20px;
       background: #0d1020;
       border: 1px solid #1e2540;
       border-radius: 12px;
-      padding: 20px 30px;
+      padding: 20px 28px;
       text-align: center;
+      max-width: 760px;
       width: 100%;
     }
-    .formula-box h3 { color: #8899bb; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
-    .formula {
-      font-size: 1.6rem;
-      color: #e8e8f0;
-      letter-spacing: 2px;
-    }
-    .formula .pi { color: #f5a623; font-size: 1.9rem; }
-    .formula .highlight { color: #4fc3f7; }
-
-    /* Explanation */
-    .explanation {
-      margin-top: 20px;
-      color: #8899bb;
-      text-align: center;
-      line-height: 1.8;
-      font-size: 0.95rem;
-      max-width: 620px;
-    }
-    .explanation strong { color: #f5a623; }
-
-    /* Button */
+    .formula-card .f { font-size: 1.55rem; letter-spacing: 2px; color: #ccd; }
+    .formula-card .f .pi { color: #f5a623; }
+    .formula-card .note { margin-top: 8px; color: #556; font-size: 0.85rem; }
     .btn {
-      margin-top: 22px;
-      background: transparent;
+      margin-top: 20px;
       border: 2px solid #f5a623;
+      background: transparent;
       color: #f5a623;
-      padding: 10px 34px;
-      border-radius: 30px;
+      padding: 9px 32px;
+      border-radius: 28px;
       font-size: 1rem;
-      font-family: 'Georgia', serif;
+      font-family: Georgia, serif;
       cursor: pointer;
       letter-spacing: 1px;
-      transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      transition: background 0.2s, color 0.2s;
     }
-    .btn:hover {
-      background: #f5a623;
-      color: #07080f;
-      box-shadow: 0 0 20px rgba(245,166,35,0.4);
-    }
-
-    /* Digits */
-    .digits-box {
-      margin-top: 28px;
-      background: #0d1020;
-      border: 1px solid #1e2540;
-      border-radius: 12px;
-      padding: 20px 24px;
-      width: 100%;
-      text-align: center;
-    }
-    .digits-box h3 { color: #8899bb; font-size: 0.85rem; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 12px; }
+    .btn:hover { background: #f5a623; color: #07080f; }
     .digits {
-      font-size: 1rem;
-      color: #4aaa88;
-      letter-spacing: 3px;
+      margin-top: 22px;
+      color: #3a7a5a;
+      font-size: 0.9rem;
+      letter-spacing: 2.5px;
+      text-align: center;
+      max-width: 700px;
       line-height: 2;
-      word-break: break-all;
     }
-    .digits .d-pi { color: #f5a623; font-size: 1.3rem; font-weight: bold; }
-    .digits .d-3  { color: #e8e8f0; }
-
-    footer {
-      margin-top: 40px;
-      color: #334;
-      font-size: 0.8rem;
-      letter-spacing: 1px;
-    }
+    .digits .dp { color: #f5a623; font-size: 1.2rem; }
   </style>
 </head>
 <body>
-<div class="content">
 
-  <header>
-    <div class="pi-symbol">π</div>
-    <h2>A constante que conecta o círculo ao infinito</h2>
-  </header>
+<h1>π</h1>
+<div class="sub">quantas vezes o diâmetro cabe na circunferência?</div>
 
-  <div class="canvas-wrap">
-    <canvas id="c"></canvas>
-    <div class="info-bar">
-      <div class="badge">Rotação <strong id="rot">0°</strong></div>
-      <div class="badge">Distância <strong id="dist">0</strong></div>
-      <div class="badge">π × d <strong id="pid">≈ 0</strong></div>
-    </div>
-  </div>
+<div class="card">
+  <canvas id="c" width="720" height="330"></canvas>
+  <div id="lbl"></div>
+</div>
 
-  <div class="formula-box">
-    <h3>Relação fundamental</h3>
-    <div class="formula">
-      C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span><span class="highlight">r</span>
-    </div>
-  </div>
+<div class="formula-card">
+  <div class="f">C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span>r</div>
+  <div class="note">π é exatamente quantas vezes o diâmetro cabe na circunferência</div>
+</div>
 
-  <p class="explanation">
-    Ao rolar sobre uma linha plana, um círculo percorre exatamente
-    <strong>π × diâmetro</strong> em uma volta completa (360°).
-    O ponto vermelho traça uma <strong>cicloide</strong> — a curva que
-    prova geometricamente o valor de <strong>π ≈ 3.14159...</strong>
-  </p>
+<button class="btn" onclick="restart()">↺ Repetir animação</button>
 
-  <button class="btn" onclick="restart()">↺ Repetir animação</button>
-
-  <div class="digits-box">
-    <h3>Primeiros dígitos de π</h3>
-    <div class="digits">
-      <span class="d-pi">π</span> = <span class="d-3">3</span>.14159&nbsp;26535&nbsp;89793&nbsp;23846&nbsp;26433&nbsp;83279&nbsp;50288&nbsp;41971&nbsp;69399&nbsp;37510...
-    </div>
-  </div>
-
-  <footer>π é irracional e transcendente — seus dígitos nunca se repetem nem terminam.</footer>
-
+<div class="digits">
+  <span class="dp">π</span> = 3.14159 26535 89793 23846 26433 83279 50288 41971...
 </div>
 
 <script>
-  const canvas = document.getElementById('c');
-  const ctx    = canvas.getContext('2d');
+  const cv  = document.getElementById('c');
+  const ctx = cv.getContext('2d');
+  const W   = 720, H = 330;
 
-  // Logical dimensions
-  const LW = 720, LH = 300;
-  canvas.width  = LW;
-  canvas.height = LH;
+  // ── Layout ────────────────────────────────────────────────────────────────
+  const R   = 68;           // circle radius (px)
+  const CX  = 118, CY = 158; // circle centre
+  const D   = 2 * R;        // diameter = 136 px
+  const C   = Math.PI * D;  // circumference ≈ 427.3 px
 
-  const R       = 72;
-  const GROUND  = LH - 48;
-  const START_X = R + 44;
-  const FULL    = 2 * Math.PI;        // one rotation
-  const DIST    = FULL * R;           // π × diameter
-  const SPEED   = 0.018;
+  // Unrolled line
+  const LX0 = 236;          // line start x
+  const LY  = 255;          // line y
+  // line end: 236 + 427 = 663 — fits inside 720 ✓
 
-  let angle = 0;
-  let trail = [];
+  // Segment colours: 1d, 2d, 3d, remainder
+  const SEG = [
+    { label: '1 × d', color: '#4fc3f7' },
+    { label: '2 × d', color: '#4aaa88' },
+    { label: '3 × d', color: '#f5a623' },
+    { label: `+0.14… × d`, color: '#ff5060' },
+  ];
+  // Segment x-ranges on the line
+  const segs = [
+    [LX0,         LX0 + D    ],
+    [LX0 + D,     LX0 + 2*D  ],
+    [LX0 + 2*D,   LX0 + 3*D  ],
+    [LX0 + 3*D,   LX0 + C    ],
+  ];
+
+  // ── State ─────────────────────────────────────────────────────────────────
+  const PHASES = ['circle','unroll','measure','done'];
+  let phaseIdx = 0;
+  let t        = 0;   // 0→1 within each phase
+  const DUR    = [70, 110, 160, Infinity]; // frames per phase
+
   let rafId;
-  let done  = false;
 
-  // ── helpers ──────────────────────────────────────────────
-  function cx()  { return START_X + angle * R; }
-  function cy()  { return GROUND - R; }
-  function dotX(){ return cx() + R * Math.sin(angle); }
-  function dotY(){ return cy() - R * Math.cos(angle); }
+  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
+  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
-  function lerp(a, b, t) { return a + (b - a) * Math.clamp01(t); }
-  Math.clamp01 = t => Math.max(0, Math.min(1, t));
-
-  // ── draw ─────────────────────────────────────────────────
-  function draw() {
-    ctx.clearRect(0, 0, LW, LH);
-
-    // grid
-    ctx.strokeStyle = 'rgba(255,255,255,0.03)';
+  // ── Draw helpers ─────────────────────────────────────────────────────────
+  function drawGrid(){
+    ctx.strokeStyle = 'rgba(255,255,255,0.025)';
     ctx.lineWidth = 1;
-    for (let x = 0; x < LW; x += 36) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, LH); ctx.stroke();
-    }
-    for (let y = 0; y < LH; y += 36) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(LW, y); ctx.stroke();
-    }
+    for(let x=0;x<W;x+=40){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+    for(let y=0;y<H;y+=40){ ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
+  }
 
-    // ground
-    ctx.strokeStyle = '#253050';
-    ctx.lineWidth = 2;
-    ctx.beginPath(); ctx.moveTo(0, GROUND); ctx.lineTo(LW, GROUND); ctx.stroke();
+  function drawCircle(alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // glow
+    const g = ctx.createRadialGradient(CX,CY,R*0.5,CX,CY,R*1.5);
+    g.addColorStop(0,'rgba(79,195,247,0)');
+    g.addColorStop(1,'rgba(79,195,247,0.05)');
+    ctx.beginPath(); ctx.arc(CX,CY,R*1.5,0,Math.PI*2);
+    ctx.fillStyle=g; ctx.fill();
+    // circle
+    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
+    ctx.strokeStyle='#4fc3f7'; ctx.lineWidth=2.5; ctx.stroke();
+    ctx.restore();
+  }
 
-    // ── pi×d reference line (fades in after 30% rotation) ──
-    const lineAlpha = Math.clamp01((angle / FULL - 0.3) / 0.4);
-    if (lineAlpha > 0) {
-      // dashed orange line
-      ctx.save();
-      ctx.globalAlpha = lineAlpha * 0.65;
-      ctx.strokeStyle = '#f5a623';
-      ctx.lineWidth = 2.5;
-      ctx.setLineDash([10, 5]);
+  function drawDiameter(alpha){
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    // horizontal diameter
+    ctx.beginPath();
+    ctx.moveTo(CX-R, CY);
+    ctx.lineTo(CX+R, CY);
+    ctx.strokeStyle='#f5a623'; ctx.lineWidth=2; ctx.stroke();
+    // arrowheads
+    arrowHead(CX-R, CY, -1);
+    arrowHead(CX+R, CY,  1);
+    // label d
+    ctx.fillStyle='#f5a623'; ctx.font='bold 14px Georgia';
+    ctx.textAlign='center';
+    ctx.fillText('d = 2r', CX, CY-12);
+    // label r (half)
+    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
+    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX,CY-R); ctx.stroke();
+    ctx.setLineDash([]);
+    ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='13px Georgia';
+    ctx.textAlign='left';
+    ctx.fillText('r', CX+5, CY-R/2+5);
+    // centre dot
+    ctx.beginPath(); ctx.arc(CX,CY,3.5,0,Math.PI*2);
+    ctx.fillStyle='#4fc3f7'; ctx.fill();
+    ctx.restore();
+  }
+
+  function arrowHead(x,y,dir){
+    ctx.beginPath();
+    ctx.moveTo(x,y);
+    ctx.lineTo(x-dir*10, y-5);
+    ctx.lineTo(x-dir*10, y+5);
+    ctx.closePath();
+    ctx.fillStyle='#f5a623'; ctx.fill();
+  }
+
+  function drawArc(progress){
+    // orange arc growing from top, clockwise, proportional to progress
+    const startA = -Math.PI/2;
+    const endA   = startA + Math.PI*2*progress;
+    ctx.beginPath();
+    ctx.arc(CX, CY, R, startA, endA);
+    ctx.strokeStyle='#f5a623'; ctx.lineWidth=4; ctx.stroke();
+  }
+
+  function drawLine(len, alpha){
+    if(len<=0) return;
+    ctx.save();
+    ctx.globalAlpha = alpha;
+    ctx.beginPath();
+    ctx.moveTo(LX0, LY);
+    ctx.lineTo(LX0+len, LY);
+    ctx.strokeStyle='#4fc3f7'; ctx.lineWidth=3; ctx.stroke();
+    // start cap label
+    ctx.fillStyle='rgba(79,195,247,0.7)'; ctx.font='12px Georgia'; ctx.textAlign='center';
+    ctx.fillText('início', LX0, LY+18);
+    ctx.restore();
+  }
+
+  function drawSegments(progress){
+    // progress 0→1 fills segments one by one
+    const totalLen = C;
+    const filled   = totalLen * progress;
+
+    for(let i=0;i<4;i++){
+      const [x0,x1] = segs[i];
+      const segLen   = x1 - x0;
+      const drawn    = clamp(filled - (x0-LX0), 0, segLen);
+      if(drawn <= 0) continue;
+
+      // segment fill
       ctx.beginPath();
-      ctx.moveTo(START_X - R, GROUND - 12);
-      ctx.lineTo(START_X - R + DIST, GROUND - 12);
-      ctx.stroke();
-      ctx.setLineDash([]);
-      ctx.restore();
+      ctx.moveTo(x0, LY);
+      ctx.lineTo(x0+drawn, LY);
+      ctx.strokeStyle = SEG[i].color; ctx.lineWidth=5; ctx.stroke();
 
-      // arrows at ends
-      if (lineAlpha > 0.6) {
-        ctx.save();
-        ctx.globalAlpha = Math.clamp01((lineAlpha - 0.6) / 0.4);
-        ctx.fillStyle = '#f5a623';
-        ctx.font = 'bold 13px Georgia';
+      // tick + label at segment start (except seg 0)
+      if(i>0){
+        ctx.strokeStyle=SEG[i-1].color; ctx.lineWidth=1.5;
+        ctx.beginPath(); ctx.moveTo(x0,LY-10); ctx.lineTo(x0,LY+10); ctx.stroke();
+      }
+
+      // label above when segment fully drawn
+      if(drawn >= segLen - 1){
+        ctx.fillStyle = SEG[i].color;
+        ctx.font = 'bold 12px Georgia';
         ctx.textAlign = 'center';
-        ctx.fillText('← π × diâmetro →', START_X - R + DIST / 2, GROUND - 20);
-        ctx.restore();
+        const mx = x0 + segLen/2;
+        ctx.fillText(SEG[i].label, mx, LY-14);
       }
     }
 
-    // diameter reference below ground
+    // end tick
+    const endX = LX0 + clamp(filled, 0, C);
+    ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(endX,LY-10); ctx.lineTo(endX,LY+10); ctx.stroke();
+  }
+
+  function drawBraceAndLabel(alpha){
     ctx.save();
-    ctx.strokeStyle = 'rgba(79,195,247,0.4)';
-    ctx.lineWidth = 1.5;
-    ctx.setLineDash([5, 4]);
+    ctx.globalAlpha = alpha;
+    // brace below line
+    const y = LY + 28;
+    ctx.strokeStyle='rgba(245,166,35,0.7)'; ctx.lineWidth=1.5;
     ctx.beginPath();
-    ctx.moveTo(START_X - R, GROUND + 14);
-    ctx.lineTo(START_X + R, GROUND + 14);
+    ctx.moveTo(LX0, y); ctx.lineTo(LX0, y+8);
+    ctx.moveTo(LX0, y+8); ctx.lineTo(LX0+C, y+8);
+    ctx.moveTo(LX0+C, y+8); ctx.lineTo(LX0+C, y);
     ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle = 'rgba(79,195,247,0.55)';
-    ctx.font = '11px Georgia';
-    ctx.textAlign = 'center';
-    ctx.fillText('d = 2r', START_X, GROUND + 26);
+    ctx.fillStyle='#f5a623'; ctx.font='bold 14px Georgia';
+    ctx.textAlign='center';
+    ctx.fillText('C = π × d', LX0+C/2, y+25);
     ctx.restore();
+  }
 
-    // ── cycloid trail ──
-    if (trail.length > 1) {
-      ctx.beginPath();
-      ctx.moveTo(trail[0].x, trail[0].y);
-      for (let i = 1; i < trail.length; i++) ctx.lineTo(trail[i].x, trail[i].y);
-      ctx.strokeStyle = 'rgba(255,80,100,0.75)';
-      ctx.lineWidth = 2;
-      ctx.lineJoin = 'round';
-      ctx.stroke();
+  function drawCounterOnCircle(progress){
+    // show how many "d"s have been peeled, inside circle
+    const count = (progress * Math.PI).toFixed(2);
+    ctx.fillStyle='rgba(245,166,35,0.9)'; ctx.font='bold 18px Georgia';
+    ctx.textAlign='center';
+    ctx.fillText(count, CX, CY+8);
+    ctx.font='11px Georgia'; ctx.fillStyle='rgba(245,166,35,0.6)';
+    ctx.fillText('× d', CX, CY+24);
+  }
+
+  // ── Labels per phase ──────────────────────────────────────────────────────
+  const PHASE_LABELS = [
+    'Um círculo com diâmetro d = 2r',
+    'Desenrolando a circunferência em linha reta…',
+    'Quantos diâmetros cabem? Exatamente π = 3.14159… vezes!',
+    'C = π × d — o diâmetro cabe π vezes na circunferência.',
+  ];
+
+  // ── Main draw ─────────────────────────────────────────────────────────────
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    drawGrid();
+
+    const ph   = PHASES[phaseIdx];
+    const prog = ease(clamp(t,0,1));
+
+    if(ph === 'circle'){
+      drawCircle(prog);
+      drawDiameter(prog);
+      document.getElementById('lbl').textContent = PHASE_LABELS[0];
     }
 
-    // ── circle ──
-    // glow
-    const grd = ctx.createRadialGradient(cx(), cy(), R * 0.6, cx(), cy(), R * 1.4);
-    grd.addColorStop(0, 'rgba(79,195,247,0)');
-    grd.addColorStop(1, 'rgba(79,195,247,0.06)');
-    ctx.beginPath(); ctx.arc(cx(), cy(), R * 1.4, 0, FULL);
-    ctx.fillStyle = grd; ctx.fill();
-
-    ctx.beginPath(); ctx.arc(cx(), cy(), R, 0, FULL);
-    ctx.strokeStyle = '#4fc3f7'; ctx.lineWidth = 2.5; ctx.stroke();
-    ctx.fillStyle = 'rgba(79,195,247,0.05)'; ctx.fill();
-
-    // tick marks on circle (every 30°)
-    for (let i = 0; i < 12; i++) {
-      const a = (i / 12) * FULL - angle;  // fixed in world space
-      const tx = cx() + Math.cos(a) * R;
-      const ty = cy() + Math.sin(a) * R;
-      const ix = cx() + Math.cos(a) * (R - 8);
-      const iy = cy() + Math.sin(a) * (R - 8);
-      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(ix, iy);
-      ctx.strokeStyle = 'rgba(79,195,247,0.4)'; ctx.lineWidth = 1; ctx.stroke();
+    if(ph === 'unroll'){
+      drawCircle(1);
+      drawDiameter(1);
+      drawArc(prog);
+      drawLine(prog * C, 1);
+      drawCounterOnCircle(prog);
+      document.getElementById('lbl').textContent = PHASE_LABELS[1];
     }
 
-    // radius line
-    ctx.beginPath();
-    ctx.moveTo(cx(), cy());
-    ctx.lineTo(dotX(), dotY());
-    ctx.strokeStyle = '#f5a623'; ctx.lineWidth = 2; ctx.stroke();
-
-    // center
-    ctx.beginPath(); ctx.arc(cx(), cy(), 4, 0, FULL);
-    ctx.fillStyle = '#4fc3f7'; ctx.fill();
-
-    // rolling dot
-    trail.push({ x: dotX(), y: dotY() });
-    ctx.beginPath(); ctx.arc(dotX(), dotY(), 7, 0, FULL);
-    ctx.fillStyle = '#ff5060'; ctx.fill();
-    ctx.beginPath(); ctx.arc(dotX(), dotY(), 3, 0, FULL);
-    ctx.fillStyle = '#fff'; ctx.fill();
-
-    // ── labels ──
-    const pct = Math.min(angle / FULL * 100, 100).toFixed(0);
-    const deg = Math.min(angle / FULL * 360, 360).toFixed(0);
-    document.getElementById('rot').textContent  = deg + '°';
-    document.getElementById('dist').textContent = (angle * R).toFixed(1) + ' px';
-    document.getElementById('pid').textContent  = '≈ ' + DIST.toFixed(1) + ' px';
-
-    // completion banner
-    if (done) {
-      ctx.save();
-      ctx.globalAlpha = 0.92;
-      ctx.fillStyle = 'rgba(7,8,15,0.7)';
-      ctx.fillRect(LW/2 - 210, 12, 420, 44);
-      ctx.fillStyle = '#f5a623';
-      ctx.font = 'bold 16px Georgia';
-      ctx.textAlign = 'center';
-      ctx.fillText('✓ 1 volta completa = π × diâmetro ≈ ' + DIST.toFixed(2) + ' px', LW/2, 40);
-      ctx.restore();
+    if(ph === 'measure' || ph === 'done'){
+      drawCircle(1);
+      drawDiameter(1);
+      drawArc(1);
+      // after unroll, keep the plain line faint and overlay segments
+      drawLine(C, 0.2);
+      const sp = ph==='done' ? 1 : prog;
+      drawSegments(sp);
+      if(ph==='done' || prog > 0.85) drawBraceAndLabel(ph==='done'?1:(prog-0.85)/0.15);
+      document.getElementById('lbl').textContent = PHASE_LABELS[ph==='done'?3:2];
     }
   }
 
-  function step() {
-    angle += SPEED;
-    if (angle >= FULL) { angle = FULL; done = true; draw(); return; }
+  // ── Loop ─────────────────────────────────────────────────────────────────
+  function tick(){
     draw();
-    rafId = requestAnimationFrame(step);
+    t += 1 / DUR[phaseIdx];
+    if(t >= 1){
+      t = 0;
+      if(phaseIdx < PHASES.length - 1) phaseIdx++;
+    }
+    if(PHASES[phaseIdx] !== 'done') rafId = requestAnimationFrame(tick);
+    else draw(); // final static frame
   }
 
-  function restart() {
+  function restart(){
     cancelAnimationFrame(rafId);
-    angle = 0; trail = []; done = false;
-    rafId = requestAnimationFrame(step);
+    phaseIdx = 0; t = 0;
+    rafId = requestAnimationFrame(tick);
   }
 
   restart();

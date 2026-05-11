@@ -193,24 +193,30 @@ function toggleLang(){ lang=lang==='pt'?'en':'pt'; applyLang(); }
 // ═══════════════════════════════════════════════
 const Sound={
   ctx:null, muted:true,
-  init(){
-    if(!this.ctx) this.ctx=new(window.AudioContext||window.webkitAudioContext)();
-    if(this.ctx.state==='suspended') this.ctx.resume();
-  },
   toggle(){
     this.muted=!this.muted;
-    document.getElementById('soundBtn').textContent=this.muted?'🔇 SOM':'🔊 SOM';
-    if(!this.muted) this.init();
+    const btn=document.getElementById('soundBtn');
+    if(this.muted){ btn.textContent='🔇 SOM'; return; }
+    btn.textContent='🔊 SOM';
+    // AudioContext só pode ser criado/resumido dentro de um evento de clique
+    if(!this.ctx) this.ctx=new(window.AudioContext||window.webkitAudioContext)();
+    this.ctx.resume().then(()=>{ this._play(520,.12,.2,'sine'); }); // beep de confirmação
   },
-  tone(freq=440,dur=0.12,vol=0.18,type='square',delay=0){
-    if(this.muted||!this.ctx)return;
-    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
-    o.connect(g); g.connect(this.ctx.destination);
-    o.type=type; o.frequency.value=freq;
-    const t=this.ctx.currentTime+delay;
-    g.gain.setValueAtTime(vol,t);
-    g.gain.exponentialRampToValueAtTime(0.001,t+dur);
-    o.start(t); o.stop(t+dur);
+  _play(freq,dur,vol,type,delay){
+    if(!this.ctx||this.ctx.state!=='running')return;
+    try{
+      const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+      o.connect(g); g.connect(this.ctx.destination);
+      o.type=type||'square'; o.frequency.value=freq;
+      const t=this.ctx.currentTime+(delay||0);
+      g.gain.setValueAtTime(vol,t);
+      g.gain.exponentialRampToValueAtTime(0.001,t+dur);
+      o.start(t); o.stop(t+dur);
+    }catch(e){}
+  },
+  tone(freq,dur,vol,type,delay){
+    if(this.muted||!this.ctx||this.ctx.state!=='running')return;
+    this._play(freq||440,dur||.12,vol||.18,type||'square',delay||0);
   },
   boot(){ [220,330,440,660].forEach((f,i)=>this.tone(f,.08,.15,'square',i*.07)); },
   segment(i){ [330,440,550,220].forEach((f,j)=>this.tone(f*(1+i*.12),.15,.2,'sine',j*.03)); },

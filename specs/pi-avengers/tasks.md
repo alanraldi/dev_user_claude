@@ -85,8 +85,8 @@
 
 ## Fase 7 — Backlog
 
-- [ ] Sons contínuos: reator Arc com hum grave enquanto a página está aberta
-- [ ] Modo apresentação: avança fases com barra de espaço ou seta
+- [x] Sons contínuos: reator Arc com hum grave enquanto a página está aberta
+- [x] Modo apresentação: avança fases com barra de espaço ou seta
 
 ---
 

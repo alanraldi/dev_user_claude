@@ -1,366 +1,310 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>π e a Circunferência</title>
-  <style>
-    *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      background: #07080f;
-      font-family: Georgia, serif;
-      color: #e8e8f0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      padding: 32px 16px 60px;
-    }
-    h1 {
-      font-size: 5rem;
-      color: #f5a623;
-      text-shadow: 0 0 40px rgba(245,166,35,0.55);
-      line-height: 1;
-      margin-bottom: 6px;
-    }
-    .sub {
-      color: #556;
-      font-size: 1rem;
-      letter-spacing: 1.5px;
-      margin-bottom: 28px;
-      text-align: center;
-    }
-    .card {
-      background: #0d1020;
-      border: 1px solid #1e2540;
-      border-radius: 16px;
-      padding: 20px;
-      width: 100%;
-      max-width: 760px;
-    }
-    canvas { display: block; width: 100%; }
-    #lbl {
-      text-align: center;
-      margin-top: 14px;
-      min-height: 22px;
-      font-size: 0.95rem;
-      color: #7788aa;
-      letter-spacing: 0.5px;
-    }
-    .formula-card {
-      margin-top: 20px;
-      background: #0d1020;
-      border: 1px solid #1e2540;
-      border-radius: 12px;
-      padding: 20px 28px;
-      text-align: center;
-      max-width: 760px;
-      width: 100%;
-    }
-    .formula-card .f { font-size: 1.55rem; letter-spacing: 2px; color: #ccd; }
-    .formula-card .f .pi { color: #f5a623; }
-    .formula-card .note { margin-top: 8px; color: #556; font-size: 0.85rem; }
-    .btn {
-      margin-top: 20px;
-      border: 2px solid #f5a623;
-      background: transparent;
-      color: #f5a623;
-      padding: 9px 32px;
-      border-radius: 28px;
-      font-size: 1rem;
-      font-family: Georgia, serif;
-      cursor: pointer;
-      letter-spacing: 1px;
-      transition: background 0.2s, color 0.2s;
-    }
-    .btn:hover { background: #f5a623; color: #07080f; }
-    .digits {
-      margin-top: 22px;
-      color: #3a7a5a;
-      font-size: 0.9rem;
-      letter-spacing: 2.5px;
-      text-align: center;
-      max-width: 700px;
-      line-height: 2;
-    }
-    .digits .dp { color: #f5a623; font-size: 1.2rem; }
-  </style>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>AVENGERS × π</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#050810;font-family:'Courier New',monospace;color:#ccd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 60px;overflow-x:hidden}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+.wrap{position:relative;z-index:1;width:100%;max-width:780px;display:flex;flex-direction:column;align-items:center}
+header{text-align:center;margin-bottom:24px}
+.title{font-size:2.6rem;font-weight:bold;letter-spacing:10px;color:#e53935;text-shadow:0 0 24px rgba(229,57,53,.7),0 0 48px rgba(229,57,53,.3);text-transform:uppercase}
+.sub{font-size:.8rem;letter-spacing:4px;color:#f5a623;text-transform:uppercase;margin-top:6px}
+.hr{width:340px;height:1px;background:linear-gradient(to right,transparent,#e53935,transparent);margin:12px auto}
+.card{background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.35);border-radius:8px;padding:20px;width:100%;position:relative}
+.card::before,.card::after{content:'';position:absolute;width:18px;height:18px;border-color:#e53935;border-style:solid}
+.card::before{top:8px;left:8px;border-width:2px 0 0 2px}
+.card::after{bottom:8px;right:8px;border-width:0 2px 2px 0}
+canvas{display:block;width:100%}
+#msg{margin-top:14px;font-size:.82rem;color:#f5a623;letter-spacing:.5px;min-height:20px;text-align:center}
+#msg::before{content:'FRIDAY: ';color:#e53935}
+.badges{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
+.badge{border:1px solid;border-radius:4px;padding:5px 14px;font-size:.75rem;letter-spacing:1px;opacity:.25;transition:opacity .4s,box-shadow .4s;text-transform:uppercase}
+.badge.on{opacity:1}
+.b0{border-color:#e53935;color:#e53935}.b0.on{box-shadow:0 0 10px rgba(229,57,53,.5)}
+.b1{border-color:#1565c0;color:#64b5f6}.b1.on{box-shadow:0 0 10px rgba(100,181,246,.5)}
+.b2{border-color:#f5a623;color:#f5a623}.b2.on{box-shadow:0 0 10px rgba(245,166,35,.5)}
+.b3{border-color:#2e7d32;color:#66bb6a}.b3.on{box-shadow:0 0 10px rgba(102,187,106,.5)}
+.fcard{margin-top:18px;background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.25);border-radius:8px;padding:18px 24px;text-align:center;width:100%}
+.fcard .f{font-size:1.4rem;letter-spacing:3px}
+.fcard .pi{color:#f5a623}
+.fcard .note{margin-top:6px;font-size:.75rem;color:#445;letter-spacing:1px}
+.btn{margin-top:18px;border:2px solid #e53935;background:transparent;color:#e53935;padding:9px 32px;border-radius:4px;font-size:.85rem;font-family:'Courier New',monospace;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.btn:hover{background:#e53935;color:#fff;box-shadow:0 0 18px rgba(229,57,53,.5)}
+.digits{margin-top:20px;color:#223;font-size:.82rem;letter-spacing:2px;text-align:center}
+.digits span{color:#f5a623}
+</style>
 </head>
 <body>
+<canvas id="bgc"></canvas>
+<div class="wrap">
+  <header>
+    <div class="title">⚡ Avengers ⚡</div>
+    <div class="sub">Protocolo π — Análise do Reator Arc</div>
+    <div class="hr"></div>
+  </header>
 
-<h1>π</h1>
-<div class="sub">quantas vezes o diâmetro cabe na circunferência?</div>
+  <div class="card">
+    <canvas id="c" width="720" height="320"></canvas>
+    <div id="msg">Aguardando protocolo...</div>
+    <div class="badges">
+      <div class="badge b0" id="b0">⚙ Iron Man — 1×d</div>
+      <div class="badge b1" id="b1">🛡 Capitão América — 2×d</div>
+      <div class="badge b2" id="b2">⚡ Thor — 3×d</div>
+      <div class="badge b3" id="b3">☢ Hulk — +0.14×d</div>
+    </div>
+  </div>
 
-<div class="card">
-  <canvas id="c" width="720" height="330"></canvas>
-  <div id="lbl"></div>
-</div>
+  <div class="fcard">
+    <div class="f">C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span>r</div>
+    <div class="note">// o diâmetro cabe exatamente π vezes na circunferência — sempre, em qualquer círculo</div>
+  </div>
 
-<div class="formula-card">
-  <div class="f">C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span>r</div>
-  <div class="note">π é exatamente quantas vezes o diâmetro cabe na circunferência</div>
-</div>
-
-<button class="btn" onclick="restart()">↺ Repetir animação</button>
-
-<div class="digits">
-  <span class="dp">π</span> = 3.14159 26535 89793 23846 26433 83279 50288 41971...
+  <button class="btn" onclick="restart()">↺ Reiniciar protocolo</button>
+  <div class="digits"><span>π</span> = 3.14159 26535 89793 23846 26433 83279 50288...</div>
 </div>
 
 <script>
-  const cv  = document.getElementById('c');
-  const ctx = cv.getContext('2d');
-  const W   = 720, H = 330;
-
-  // ── Layout ────────────────────────────────────────────────────────────────
-  const R   = 68;           // circle radius (px)
-  const CX  = 118, CY = 158; // circle centre
-  const D   = 2 * R;        // diameter = 136 px
-  const C   = Math.PI * D;  // circumference ≈ 427.3 px
-
-  // Unrolled line
-  const LX0 = 236;          // line start x
-  const LY  = 255;          // line y
-  // line end: 236 + 427 = 663 — fits inside 720 ✓
-
-  // Segment colours: 1d, 2d, 3d, remainder
-  const SEG = [
-    { label: '1 × d', color: '#4fc3f7' },
-    { label: '2 × d', color: '#4aaa88' },
-    { label: '3 × d', color: '#f5a623' },
-    { label: `+0.14… × d`, color: '#ff5060' },
-  ];
-  // Segment x-ranges on the line
-  const segs = [
-    [LX0,         LX0 + D    ],
-    [LX0 + D,     LX0 + 2*D  ],
-    [LX0 + 2*D,   LX0 + 3*D  ],
-    [LX0 + 3*D,   LX0 + C    ],
-  ];
-
-  // ── State ─────────────────────────────────────────────────────────────────
-  const PHASES = ['circle','unroll','measure','done'];
-  let phaseIdx = 0;
-  let t        = 0;   // 0→1 within each phase
-  const DUR    = [70, 110, 160, Infinity]; // frames per phase
-
-  let rafId;
-
-  function ease(t) { return t < 0.5 ? 2*t*t : -1+(4-2*t)*t; }
-  function clamp(v,a,b){ return Math.max(a,Math.min(b,v)); }
-
-  // ── Draw helpers ─────────────────────────────────────────────────────────
-  function drawGrid(){
-    ctx.strokeStyle = 'rgba(255,255,255,0.025)';
-    ctx.lineWidth = 1;
-    for(let x=0;x<W;x+=40){ ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
-    for(let y=0;y<H;y+=40){ ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
-  }
-
-  function drawCircle(alpha){
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    // glow
-    const g = ctx.createRadialGradient(CX,CY,R*0.5,CX,CY,R*1.5);
-    g.addColorStop(0,'rgba(79,195,247,0)');
-    g.addColorStop(1,'rgba(79,195,247,0.05)');
-    ctx.beginPath(); ctx.arc(CX,CY,R*1.5,0,Math.PI*2);
-    ctx.fillStyle=g; ctx.fill();
-    // circle
-    ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2);
-    ctx.strokeStyle='#4fc3f7'; ctx.lineWidth=2.5; ctx.stroke();
-    ctx.restore();
-  }
-
-  function drawDiameter(alpha){
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    // horizontal diameter
-    ctx.beginPath();
-    ctx.moveTo(CX-R, CY);
-    ctx.lineTo(CX+R, CY);
-    ctx.strokeStyle='#f5a623'; ctx.lineWidth=2; ctx.stroke();
-    // arrowheads
-    arrowHead(CX-R, CY, -1);
-    arrowHead(CX+R, CY,  1);
-    // label d
-    ctx.fillStyle='#f5a623'; ctx.font='bold 14px Georgia';
-    ctx.textAlign='center';
-    ctx.fillText('d = 2r', CX, CY-12);
-    // label r (half)
-    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1; ctx.setLineDash([4,3]);
-    ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX,CY-R); ctx.stroke();
-    ctx.setLineDash([]);
-    ctx.fillStyle='rgba(255,255,255,0.5)'; ctx.font='13px Georgia';
-    ctx.textAlign='left';
-    ctx.fillText('r', CX+5, CY-R/2+5);
-    // centre dot
-    ctx.beginPath(); ctx.arc(CX,CY,3.5,0,Math.PI*2);
-    ctx.fillStyle='#4fc3f7'; ctx.fill();
-    ctx.restore();
-  }
-
-  function arrowHead(x,y,dir){
-    ctx.beginPath();
-    ctx.moveTo(x,y);
-    ctx.lineTo(x-dir*10, y-5);
-    ctx.lineTo(x-dir*10, y+5);
-    ctx.closePath();
-    ctx.fillStyle='#f5a623'; ctx.fill();
-  }
-
-  function drawArc(progress){
-    // orange arc growing from top, clockwise, proportional to progress
-    const startA = -Math.PI/2;
-    const endA   = startA + Math.PI*2*progress;
-    ctx.beginPath();
-    ctx.arc(CX, CY, R, startA, endA);
-    ctx.strokeStyle='#f5a623'; ctx.lineWidth=4; ctx.stroke();
-  }
-
-  function drawLine(len, alpha){
-    if(len<=0) return;
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    ctx.beginPath();
-    ctx.moveTo(LX0, LY);
-    ctx.lineTo(LX0+len, LY);
-    ctx.strokeStyle='#4fc3f7'; ctx.lineWidth=3; ctx.stroke();
-    // start cap label
-    ctx.fillStyle='rgba(79,195,247,0.7)'; ctx.font='12px Georgia'; ctx.textAlign='center';
-    ctx.fillText('início', LX0, LY+18);
-    ctx.restore();
-  }
-
-  function drawSegments(progress){
-    // progress 0→1 fills segments one by one
-    const totalLen = C;
-    const filled   = totalLen * progress;
-
-    for(let i=0;i<4;i++){
-      const [x0,x1] = segs[i];
-      const segLen   = x1 - x0;
-      const drawn    = clamp(filled - (x0-LX0), 0, segLen);
-      if(drawn <= 0) continue;
-
-      // segment fill
-      ctx.beginPath();
-      ctx.moveTo(x0, LY);
-      ctx.lineTo(x0+drawn, LY);
-      ctx.strokeStyle = SEG[i].color; ctx.lineWidth=5; ctx.stroke();
-
-      // tick + label at segment start (except seg 0)
-      if(i>0){
-        ctx.strokeStyle=SEG[i-1].color; ctx.lineWidth=1.5;
-        ctx.beginPath(); ctx.moveTo(x0,LY-10); ctx.lineTo(x0,LY+10); ctx.stroke();
+// ── background: hex grid + particles ─────────────────
+;(function(){
+  const bg = document.getElementById('bgc');
+  const bx = bg.getContext('2d');
+  function resize(){ bg.width=innerWidth; bg.height=innerHeight; }
+  resize(); window.addEventListener('resize',resize);
+  const pts = Array.from({length:35},()=>({
+    x:Math.random()*innerWidth, y:Math.random()*innerHeight,
+    vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
+    r:Math.random()*1.8+.4,
+    hue:Math.random()<.5?'229,57,53':'245,166,35',
+    phase:Math.random()*6.28
+  }));
+  let f=0;
+  function bgLoop(){
+    bx.clearRect(0,0,bg.width,bg.height);
+    // hex grid
+    const S=42;
+    const cols=Math.ceil(bg.width/(S*1.73))+2;
+    const rows=Math.ceil(bg.height/(S*1.5))+2;
+    for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
+      const hx=c*S*1.73+(r%2?S*.865:0), hy=r*S*1.5;
+      bx.beginPath();
+      for(let i=0;i<6;i++){
+        const a=Math.PI/180*(60*i-30);
+        i?bx.lineTo(hx+S*Math.cos(a),hy+S*Math.sin(a)):bx.moveTo(hx+S*Math.cos(a),hy+S*Math.sin(a));
       }
-
-      // label above when segment fully drawn
-      if(drawn >= segLen - 1){
-        ctx.fillStyle = SEG[i].color;
-        ctx.font = 'bold 12px Georgia';
-        ctx.textAlign = 'center';
-        const mx = x0 + segLen/2;
-        ctx.fillText(SEG[i].label, mx, LY-14);
-      }
+      bx.closePath();
+      const op=.012+.006*Math.sin(f*.018+c*.3+r*.5);
+      bx.strokeStyle=`rgba(229,57,53,${op})`; bx.lineWidth=.5; bx.stroke();
     }
-
-    // end tick
-    const endX = LX0 + clamp(filled, 0, C);
-    ctx.strokeStyle='rgba(255,255,255,0.3)'; ctx.lineWidth=1.5;
-    ctx.beginPath(); ctx.moveTo(endX,LY-10); ctx.lineTo(endX,LY+10); ctx.stroke();
+    // particles
+    for(const p of pts){
+      p.x=(p.x+p.vx+bg.width)%bg.width;
+      p.y=(p.y+p.vy+bg.height)%bg.height;
+      const op=.15+.25*Math.sin(f*.04+p.phase);
+      bx.beginPath(); bx.arc(p.x,p.y,p.r,0,Math.PI*2);
+      bx.fillStyle=`rgba(${p.hue},${op})`; bx.fill();
+    }
+    f++; requestAnimationFrame(bgLoop);
   }
+  bgLoop();
+})();
 
-  function drawBraceAndLabel(alpha){
-    ctx.save();
-    ctx.globalAlpha = alpha;
-    // brace below line
-    const y = LY + 28;
-    ctx.strokeStyle='rgba(245,166,35,0.7)'; ctx.lineWidth=1.5;
-    ctx.beginPath();
-    ctx.moveTo(LX0, y); ctx.lineTo(LX0, y+8);
-    ctx.moveTo(LX0, y+8); ctx.lineTo(LX0+C, y+8);
-    ctx.moveTo(LX0+C, y+8); ctx.lineTo(LX0+C, y);
-    ctx.stroke();
-    ctx.fillStyle='#f5a623'; ctx.font='bold 14px Georgia';
-    ctx.textAlign='center';
-    ctx.fillText('C = π × d', LX0+C/2, y+25);
+// ── main animation ────────────────────────────────────
+const cv=document.getElementById('c'), ctx=cv.getContext('2d');
+const W=720,H=320;
+const R=68, CX=118,CY=152, D=R*2, C=Math.PI*D;
+const LX=230, LY=242;
+const SCOLS=['#e53935','#1976d2','#f5a623','#43a047'];
+const segs=[[LX,LX+D],[LX+D,LX+2*D],[LX+2*D,LX+3*D],[LX+3*D,LX+C]];
+const LINES=['Inicializando protocolo π...','Reator Arc detectado. Analisando geometria...','Desenrolando circunferência como feixe de energia...','Medindo segmentos em diâmetros: 1d... 2d... 3d... +0.14×d','Análise completa. C = π × d. O Reator Arc é matematicamente perfeito.'];
+
+let ph=0,t=0,gl=0,rafId,done=false;
+const DUR=[60,80,120,160];
+
+function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t}
+function cl(v,a,b){return Math.max(a,Math.min(b,v))}
+
+function reactor(cx,cy,r){
+  gl++;
+  const g=.35+.2*Math.sin(gl*.06);
+  // outer glow
+  const og=ctx.createRadialGradient(cx,cy,r*.7,cx,cy,r*2);
+  og.addColorStop(0,`rgba(79,195,247,${g*.12})`); og.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(cx,cy,r*2,0,Math.PI*2); ctx.fillStyle=og; ctx.fill();
+  // rings
+  for(const[rr,op] of [[1,.6+g*.3],[.74,.35+g*.2],[.49,.45+g*.3]]){
+    ctx.beginPath(); ctx.arc(cx,cy,r*rr,0,Math.PI*2);
+    ctx.strokeStyle=`rgba(79,195,247,${op})`; ctx.lineWidth=2; ctx.stroke();
+  }
+  // spokes + triangle
+  for(let i=0;i<3;i++){
+    const a=(i/3)*Math.PI*2-Math.PI/2+gl*.002;
+    const x1=cx+Math.cos(a)*r*.22, y1=cy+Math.sin(a)*r*.22;
+    const x2=cx+Math.cos(a)*r*.7,  y2=cy+Math.sin(a)*r*.7;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
+    ctx.strokeStyle=`rgba(79,195,247,${.5+g*.2})`; ctx.lineWidth=1.5; ctx.stroke();
+    const b=a+Math.PI*2/3;
+    ctx.beginPath(); ctx.moveTo(x2,y2);
+    ctx.lineTo(cx+Math.cos(b)*r*.5,cy+Math.sin(b)*r*.5);
+    ctx.strokeStyle=`rgba(79,195,247,${.2+g*.15})`; ctx.lineWidth=1; ctx.stroke();
+  }
+  // core
+  const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,r*.26);
+  cg.addColorStop(0,`rgba(140,230,255,${.7+g*.25})`);
+  cg.addColorStop(.6,`rgba(79,195,247,${.35+g*.15})`);
+  cg.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(cx,cy,r*.26,0,Math.PI*2); ctx.fillStyle=cg; ctx.fill();
+  ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
+}
+
+function diameter(a){
+  ctx.save(); ctx.globalAlpha=a;
+  ctx.beginPath(); ctx.moveTo(CX-R,CY); ctx.lineTo(CX+R,CY);
+  ctx.strokeStyle='#f5a623'; ctx.lineWidth=2; ctx.stroke();
+  for(const[x,d] of [[CX-R,-1],[CX+R,1]]){
+    ctx.beginPath(); ctx.moveTo(x,CY); ctx.lineTo(x-d*8,CY-4); ctx.lineTo(x-d*8,CY+4);
+    ctx.closePath(); ctx.fillStyle='#f5a623'; ctx.fill();
+  }
+  ctx.fillStyle='#f5a623'; ctx.font='bold 13px Courier New';
+  ctx.textAlign='center'; ctx.fillText('d = 2r',CX,CY-12);
+  ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(245,166,35,.35)'; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX,CY-R); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle='rgba(245,166,35,.6)'; ctx.font='12px Courier New';
+  ctx.textAlign='left'; ctx.fillText('r',CX+5,CY-R/2+5);
+  ctx.restore();
+}
+
+function arc(p){
+  ctx.save(); ctx.shadowBlur=14; ctx.shadowColor='#e53935';
+  ctx.beginPath(); ctx.arc(CX,CY,R,-Math.PI/2,-Math.PI/2+Math.PI*2*p);
+  ctx.strokeStyle='#e53935'; ctx.lineWidth=4; ctx.stroke();
+  ctx.restore();
+}
+
+function beam(len){
+  if(len<=0)return;
+  ctx.save(); ctx.shadowBlur=12; ctx.shadowColor='#4fc3f7';
+  ctx.beginPath(); ctx.moveTo(LX,LY); ctx.lineTo(LX+len,LY);
+  ctx.strokeStyle='rgba(79,195,247,.55)'; ctx.lineWidth=7; ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(LX,LY); ctx.lineTo(LX+len,LY);
+  ctx.strokeStyle='rgba(200,245,255,.9)'; ctx.lineWidth=1.5; ctx.stroke();
+  const tg=ctx.createRadialGradient(LX+len,LY,0,LX+len,LY,12);
+  tg.addColorStop(0,'rgba(200,245,255,.8)'); tg.addColorStop(1,'transparent');
+  ctx.beginPath(); ctx.arc(LX+len,LY,12,0,Math.PI*2); ctx.fillStyle=tg; ctx.fill();
+  // counter in reactor
+  const val=(len/R/2).toFixed(2);
+  ctx.fillStyle='rgba(79,195,247,.9)'; ctx.font='bold 16px Courier New';
+  ctx.textAlign='center'; ctx.fillText(val,CX,CY+6);
+  ctx.font='10px Courier New'; ctx.fillStyle='rgba(79,195,247,.6)';
+  ctx.fillText('×d',CX,CY+20);
+  ctx.restore();
+}
+
+function segments(p){
+  const filled=C*p;
+  for(let i=0;i<4;i++){
+    const[x0,x1]=segs[i], len=x1-x0;
+    const drawn=cl(filled-(x0-LX),0,len);
+    if(drawn<=0)continue;
+    ctx.save(); ctx.shadowBlur=8; ctx.shadowColor=SCOLS[i];
+    ctx.beginPath(); ctx.moveTo(x0,LY); ctx.lineTo(x0+drawn,LY);
+    ctx.strokeStyle=SCOLS[i]; ctx.lineWidth=5; ctx.stroke();
+    ctx.restore();
+    ctx.beginPath(); ctx.moveTo(x0,LY); ctx.lineTo(x0+drawn,LY);
+    ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=1.2; ctx.stroke();
+    if(drawn>=len*.5) document.getElementById('b'+i).classList.add('on');
+    if(drawn>=len-1){
+      ctx.fillStyle=SCOLS[i]; ctx.font='bold 11px Courier New';
+      ctx.textAlign='center';
+      ctx.fillText(i<3?`${i+1}×d`:'0.14×d',(x0+x1)/2,LY-15);
+      ctx.strokeStyle=SCOLS[i]; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(x1,LY-8); ctx.lineTo(x1,LY+8); ctx.stroke();
+    }
+  }
+  ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(LX,LY-8); ctx.lineTo(LX,LY+8); ctx.stroke();
+}
+
+function brace(a){
+  if(a<=0)return;
+  ctx.save(); ctx.globalAlpha=a;
+  const y=LY+26;
+  ctx.strokeStyle='rgba(245,166,35,.7)'; ctx.lineWidth=1.5;
+  ctx.beginPath();
+  ctx.moveTo(LX,y); ctx.lineTo(LX,y+7);
+  ctx.moveTo(LX,y+7); ctx.lineTo(LX+C,y+7);
+  ctx.moveTo(LX+C,y+7); ctx.lineTo(LX+C,y);
+  ctx.stroke();
+  ctx.fillStyle='#f5a623'; ctx.font='bold 13px Courier New';
+  ctx.textAlign='center';
+  ctx.fillText('C = π × d  ≈  3.14159 × d',LX+C/2,y+22);
+  ctx.restore();
+}
+
+function hud(){
+  ctx.fillStyle='rgba(229,57,53,.6)'; ctx.font='10px Courier New';
+  ctx.textAlign='left'; ctx.fillText('STARK INDUSTRIES // FRIDAY v4.1',10,15);
+  ctx.fillStyle='rgba(245,166,35,.45)'; ctx.textAlign='right';
+  ctx.fillText(`FASE ${ph+1}/5`,W-10,15);
+  ctx.fillStyle='rgba(79,195,247,.3)'; ctx.textAlign='left';
+  ctx.fillText('π = 3.14159265...',10,H-10);
+}
+
+function draw(){
+  ctx.clearRect(0,0,W,H);
+  hud();
+  const p=ease(cl(t,0,1));
+  if(ph===0){ // boot scan
+    ctx.save(); ctx.globalAlpha=p;
+    const y=H*p;
+    const sg=ctx.createLinearGradient(0,y,W,y);
+    sg.addColorStop(0,'transparent'); sg.addColorStop(.5,'rgba(229,57,53,.5)'); sg.addColorStop(1,'transparent');
+    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y);
+    ctx.strokeStyle=sg; ctx.lineWidth=2; ctx.stroke();
+    if(Math.sin(p*30)>0){
+      ctx.fillStyle='rgba(245,166,35,.7)'; ctx.font='bold 13px Courier New';
+      ctx.textAlign='center'; ctx.fillText('STARK TECH ONLINE — INICIALIZANDO π',W/2,H/2);
+    }
     ctx.restore();
   }
-
-  function drawCounterOnCircle(progress){
-    // show how many "d"s have been peeled, inside circle
-    const count = (progress * Math.PI).toFixed(2);
-    ctx.fillStyle='rgba(245,166,35,0.9)'; ctx.font='bold 18px Georgia';
-    ctx.textAlign='center';
-    ctx.fillText(count, CX, CY+8);
-    ctx.font='11px Georgia'; ctx.fillStyle='rgba(245,166,35,0.6)';
-    ctx.fillText('× d', CX, CY+24);
+  if(ph>=1){ reactor(CX,CY,R); }
+  if(ph===1){ diameter(p); }
+  if(ph>=2){ diameter(1); }
+  if(ph===2){ arc(p); beam(p*C); }
+  if(ph>=3){
+    arc(1);
+    const sp=done?1:p;
+    segments(sp);
+    brace(done?1:cl((p-.85)/.15,0,1));
   }
+}
 
-  // ── Labels per phase ──────────────────────────────────────────────────────
-  const PHASE_LABELS = [
-    'Um círculo com diâmetro d = 2r',
-    'Desenrolando a circunferência em linha reta…',
-    'Quantos diâmetros cabem? Exatamente π = 3.14159… vezes!',
-    'C = π × d — o diâmetro cabe π vezes na circunferência.',
-  ];
-
-  // ── Main draw ─────────────────────────────────────────────────────────────
-  function draw(){
-    ctx.clearRect(0,0,W,H);
-    drawGrid();
-
-    const ph   = PHASES[phaseIdx];
-    const prog = ease(clamp(t,0,1));
-
-    if(ph === 'circle'){
-      drawCircle(prog);
-      drawDiameter(prog);
-      document.getElementById('lbl').textContent = PHASE_LABELS[0];
-    }
-
-    if(ph === 'unroll'){
-      drawCircle(1);
-      drawDiameter(1);
-      drawArc(prog);
-      drawLine(prog * C, 1);
-      drawCounterOnCircle(prog);
-      document.getElementById('lbl').textContent = PHASE_LABELS[1];
-    }
-
-    if(ph === 'measure' || ph === 'done'){
-      drawCircle(1);
-      drawDiameter(1);
-      drawArc(1);
-      // after unroll, keep the plain line faint and overlay segments
-      drawLine(C, 0.2);
-      const sp = ph==='done' ? 1 : prog;
-      drawSegments(sp);
-      if(ph==='done' || prog > 0.85) drawBraceAndLabel(ph==='done'?1:(prog-0.85)/0.15);
-      document.getElementById('lbl').textContent = PHASE_LABELS[ph==='done'?3:2];
-    }
+function tick(){
+  draw();
+  t+=1/DUR[ph];
+  if(t>=1){
+    t=0;
+    if(ph<4) ph++;
+    if(ph===4) done=true;
+    document.getElementById('msg').textContent=LINES[ph]||LINES[4];
   }
+  rafId=requestAnimationFrame(ph<4?tick:loop);
+}
 
-  // ── Loop ─────────────────────────────────────────────────────────────────
-  function tick(){
-    draw();
-    t += 1 / DUR[phaseIdx];
-    if(t >= 1){
-      t = 0;
-      if(phaseIdx < PHASES.length - 1) phaseIdx++;
-    }
-    if(PHASES[phaseIdx] !== 'done') rafId = requestAnimationFrame(tick);
-    else draw(); // final static frame
-  }
+function loop(){ draw(); rafId=requestAnimationFrame(loop); }
 
-  function restart(){
-    cancelAnimationFrame(rafId);
-    phaseIdx = 0; t = 0;
-    rafId = requestAnimationFrame(tick);
-  }
+function restart(){
+  cancelAnimationFrame(rafId);
+  ph=0; t=0; gl=0; done=false;
+  ['b0','b1','b2','b3'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  document.getElementById('msg').textContent=LINES[0];
+  rafId=requestAnimationFrame(tick);
+}
 
-  restart();
+restart();
 </script>
 </body>
 </html>

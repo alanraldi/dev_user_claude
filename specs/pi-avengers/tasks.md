@@ -59,14 +59,20 @@
 
 ---
 
-## Fase 5 — Melhorias Futuras (backlog)
+## Fase 5 — Melhorias Implementadas
 
-- [ ] Adicionar trilha sonora ou efeitos sonoros (beep HUD, som de reator)
-- [ ] Tornar o canvas responsivo para mobile (redimensionamento dinâmico)
-- [ ] Adicionar modo "explicação" com texto passo a passo para cada fase
-- [ ] Internacionalização: toggle PT/EN
-- [ ] Adicionar segundo conceito: área do círculo `A = πr²` como nova seção
-- [ ] Animação de outros personagens com outros conceitos matemáticos
+- [x] Tornar o canvas responsivo para mobile (`width: 100%` + `clamp()` em fontes e espaçamentos)
+- [x] Adicionar painel de explicação por fase (texto educativo abaixo de cada canvas, atualiza a cada fase)
+- [x] Internacionalização: toggle PT/EN (botão no header, todas as strings em objeto separado)
+- [x] Adicionar segundo conceito: área do círculo `A = πr²` como nova seção
+  - Segunda animação independente com Reator Arc, segmentos coloridos por personagem e fórmula final
+  - Badges dos personagens para a seção de área
+  - Narração FRIDAY separada para cada conceito
+
+## Fase 6 — Backlog Restante
+
+- [ ] Adicionar trilha sonora ou efeitos sonoros (beep HUD, som de reator) via Web Audio API
+- [ ] Animação de outros personagens com outros conceitos matemáticos (ex: Série de Taylor, números de Euler)
 
 ---
 

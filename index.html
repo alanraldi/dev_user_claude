@@ -8,149 +8,213 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#050810;font-family:'Courier New',monospace;color:#ccd;min-height:100vh;display:flex;flex-direction:column;align-items:center;padding:28px 16px 60px;overflow-x:hidden}
 #bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
-.wrap{position:relative;z-index:1;width:100%;max-width:780px;display:flex;flex-direction:column;align-items:center}
-header{text-align:center;margin-bottom:24px}
-.title{font-size:2.6rem;font-weight:bold;letter-spacing:10px;color:#e53935;text-shadow:0 0 24px rgba(229,57,53,.7),0 0 48px rgba(229,57,53,.3);text-transform:uppercase}
-.sub{font-size:.8rem;letter-spacing:4px;color:#f5a623;text-transform:uppercase;margin-top:6px}
-.hr{width:340px;height:1px;background:linear-gradient(to right,transparent,#e53935,transparent);margin:12px auto}
-.card{background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.35);border-radius:8px;padding:20px;width:100%;position:relative}
-.card::before,.card::after{content:'';position:absolute;width:18px;height:18px;border-color:#e53935;border-style:solid}
-.card::before{top:8px;left:8px;border-width:2px 0 0 2px}
-.card::after{bottom:8px;right:8px;border-width:0 2px 2px 0}
-canvas{display:block;width:100%}
-#msg{margin-top:14px;font-size:.82rem;color:#f5a623;letter-spacing:.5px;min-height:20px;text-align:center}
-#msg::before{content:'FRIDAY: ';color:#e53935}
-.badges{display:flex;gap:10px;margin-top:14px;flex-wrap:wrap;justify-content:center}
-.badge{border:1px solid;border-radius:4px;padding:5px 14px;font-size:.75rem;letter-spacing:1px;opacity:.25;transition:opacity .4s,box-shadow .4s;text-transform:uppercase}
+.wrap{position:relative;z-index:1;width:100%;max-width:780px;display:flex;flex-direction:column;align-items:center;gap:16px}
+
+header{text-align:center;width:100%}
+.title{font-size:clamp(1.5rem,5vw,2.5rem);font-weight:bold;letter-spacing:8px;color:#e53935;text-shadow:0 0 24px rgba(229,57,53,.7);text-transform:uppercase}
+.sub{font-size:clamp(.6rem,2vw,.8rem);letter-spacing:3px;color:#f5a623;text-transform:uppercase;margin-top:6px}
+.hr{width:300px;height:1px;background:linear-gradient(to right,transparent,#e53935,transparent);margin:10px auto}
+.lang-btn{background:transparent;border:1px solid rgba(229,57,53,.6);color:#e53935;padding:4px 16px;border-radius:3px;font-size:.7rem;font-family:'Courier New',monospace;letter-spacing:2px;cursor:pointer;margin-top:6px;transition:all .2s}
+.lang-btn:hover{background:#e53935;color:#fff}
+
+.card{background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.3);border-radius:8px;padding:20px;width:100%;position:relative}
+.card::before,.card::after{content:'';position:absolute;width:15px;height:15px;border-color:#e53935;border-style:solid}
+.card::before{top:7px;left:7px;border-width:2px 0 0 2px}
+.card::after{bottom:7px;right:7px;border-width:0 2px 2px 0}
+.card-title{font-size:clamp(.65rem,1.8vw,.75rem);letter-spacing:3px;color:#f5a623;text-transform:uppercase;margin-bottom:14px;text-align:center}
+
+canvas{display:block;width:100%;height:auto}
+
+.friday{margin-top:12px;font-size:clamp(.7rem,2vw,.8rem);color:#f5a623;letter-spacing:.5px;min-height:18px;text-align:center}
+.friday::before{content:'FRIDAY: ';color:#e53935}
+
+.badges{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;justify-content:center}
+.badge{border:1px solid;border-radius:3px;padding:4px 11px;font-size:clamp(.6rem,1.8vw,.72rem);letter-spacing:1px;opacity:.22;transition:opacity .4s,box-shadow .4s;text-transform:uppercase}
 .badge.on{opacity:1}
-.b0{border-color:#e53935;color:#e53935}.b0.on{box-shadow:0 0 10px rgba(229,57,53,.5)}
-.b1{border-color:#1565c0;color:#64b5f6}.b1.on{box-shadow:0 0 10px rgba(100,181,246,.5)}
-.b2{border-color:#f5a623;color:#f5a623}.b2.on{box-shadow:0 0 10px rgba(245,166,35,.5)}
-.b3{border-color:#2e7d32;color:#66bb6a}.b3.on{box-shadow:0 0 10px rgba(102,187,106,.5)}
-.fcard{margin-top:18px;background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.25);border-radius:8px;padding:18px 24px;text-align:center;width:100%}
-.fcard .f{font-size:1.4rem;letter-spacing:3px}
+.b0,.a0{border-color:#e53935;color:#e53935}.b0.on,.a0.on{box-shadow:0 0 8px rgba(229,57,53,.5)}
+.b1,.a1{border-color:#1565c0;color:#64b5f6}.b1.on,.a1.on{box-shadow:0 0 8px rgba(100,181,246,.5)}
+.b2,.a2{border-color:#f5a623;color:#f5a623}.b2.on,.a2.on{box-shadow:0 0 8px rgba(245,166,35,.5)}
+.b3,.a3{border-color:#2e7d32;color:#66bb6a}.b3.on,.a3.on{box-shadow:0 0 8px rgba(102,187,106,.5)}
+
+.explain{background:rgba(0,0,0,.35);border-left:2px solid rgba(229,57,53,.4);padding:10px 14px;border-radius:0 5px 5px 0;font-size:clamp(.68rem,2vw,.8rem);color:#7a8eaa;line-height:1.7;width:100%;min-height:42px;margin-top:10px;transition:opacity .5s}
+
+.fcard{background:rgba(5,8,18,.92);border:1px solid rgba(229,57,53,.22);border-radius:8px;padding:16px 20px;text-align:center;width:100%}
+.fcard .f{font-size:clamp(.9rem,3vw,1.3rem);letter-spacing:2px}
 .fcard .pi{color:#f5a623}
-.fcard .note{margin-top:6px;font-size:.75rem;color:#445;letter-spacing:1px}
-.btn{margin-top:18px;border:2px solid #e53935;background:transparent;color:#e53935;padding:9px 32px;border-radius:4px;font-size:.85rem;font-family:'Courier New',monospace;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .2s}
-.btn:hover{background:#e53935;color:#fff;box-shadow:0 0 18px rgba(229,57,53,.5)}
-.digits{margin-top:20px;color:#223;font-size:.82rem;letter-spacing:2px;text-align:center}
+.fcard .note{margin-top:6px;font-size:clamp(.62rem,1.8vw,.72rem);color:#334;letter-spacing:.5px}
+
+.btns{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.btn{border:2px solid #e53935;background:transparent;color:#e53935;padding:8px 24px;border-radius:4px;font-size:clamp(.68rem,2vw,.8rem);font-family:'Courier New',monospace;letter-spacing:2px;cursor:pointer;text-transform:uppercase;transition:all .2s}
+.btn:hover{background:#e53935;color:#fff;box-shadow:0 0 14px rgba(229,57,53,.5)}
+.digits{color:#1e2535;font-size:clamp(.68rem,2vw,.78rem);letter-spacing:2px;text-align:center}
 .digits span{color:#f5a623}
 </style>
 </head>
 <body>
 <canvas id="bgc"></canvas>
 <div class="wrap">
+
   <header>
-    <div class="title">⚡ Avengers ⚡</div>
-    <div class="sub">Protocolo π — Análise do Reator Arc</div>
+    <div class="title" id="t-title"></div>
+    <div class="sub"   id="t-sub"></div>
     <div class="hr"></div>
+    <button class="lang-btn" id="langBtn" onclick="toggleLang()"></button>
   </header>
 
+  <!-- SEÇÃO 1 — Circunferência -->
   <div class="card">
-    <canvas id="c" width="720" height="320"></canvas>
-    <div id="msg">Aguardando protocolo...</div>
+    <div class="card-title" id="t-s1"></div>
+    <canvas id="c1" width="720" height="308"></canvas>
+    <div class="friday" id="msg1"></div>
     <div class="badges">
-      <div class="badge b0" id="b0">⚙ Iron Man — 1×d</div>
-      <div class="badge b1" id="b1">🛡 Capitão América — 2×d</div>
-      <div class="badge b2" id="b2">⚡ Thor — 3×d</div>
-      <div class="badge b3" id="b3">☢ Hulk — +0.14×d</div>
+      <div class="badge b0" id="b0"></div>
+      <div class="badge b1" id="b1"></div>
+      <div class="badge b2" id="b2"></div>
+      <div class="badge b3" id="b3"></div>
     </div>
+    <div class="explain" id="ex1"></div>
+  </div>
+
+  <!-- SEÇÃO 2 — Área -->
+  <div class="card">
+    <div class="card-title" id="t-s2"></div>
+    <canvas id="c2" width="720" height="272"></canvas>
+    <div class="friday" id="msg2"></div>
+    <div class="badges">
+      <div class="badge a0" id="a0"></div>
+      <div class="badge a1" id="a1"></div>
+      <div class="badge a2" id="a2"></div>
+      <div class="badge a3" id="a3"></div>
+    </div>
+    <div class="explain" id="ex2"></div>
   </div>
 
   <div class="fcard">
-    <div class="f">C = <span class="pi">π</span> × d &nbsp;=&nbsp; 2<span class="pi">π</span>r</div>
-    <div class="note">// o diâmetro cabe exatamente π vezes na circunferência — sempre, em qualquer círculo</div>
+    <div class="f" id="t-formula"></div>
+    <div class="note" id="t-fnote"></div>
   </div>
 
-  <button class="btn" onclick="restart()">↺ Reiniciar protocolo</button>
+  <div class="btns">
+    <button class="btn" id="t-btn1" onclick="restart1()"></button>
+    <button class="btn" id="t-btn2" onclick="restart2()"></button>
+  </div>
   <div class="digits"><span>π</span> = 3.14159 26535 89793 23846 26433 83279 50288...</div>
 </div>
 
 <script>
-// ── background: hex grid + particles ─────────────────
+// ═══════════════════════════════════════════════
+// STRINGS (PT / EN)
+// ═══════════════════════════════════════════════
+const T = {
+  pt:{
+    title:'⚡ Avengers ⚡', sub:'Protocolo π — Análise do Reator Arc', langBtn:'EN',
+    s1:'Conceito 1 — Circunferência: C = π × d',
+    s2:'Conceito 2 — Área: A = π × r²',
+    b:['⚙ Iron Man — 1×d','🛡 Cap — 2×d','⚡ Thor — 3×d','☢ Hulk — 0.14×d'],
+    a:['⚙ Iron Man — 1×r²','🛡 Cap — 2×r²','⚡ Thor — 3×r²','☢ Hulk — 0.14×r²'],
+    f1:['Inicializando protocolo π...','Reator Arc detectado. Analisando geometria circular...','Desenrolando a circunferência como feixe de energia...','Medindo segmentos: 1d, 2d, 3d e +0.14×d...','Análise completa. C = π × d. O Reator é matematicamente perfeito.'],
+    f2:['Iniciando análise de área...','Calculando área: cada quadrado tem lado r.','Encaixando cópias de r² no círculo...','Contando: 1r², 2r², 3r² e mais 0.14×r²...','Análise completa. A = π × r². O mesmo π da borda vale para a área.'],
+    e1:['','O círculo tem diâmetro d = 2r e uma borda chamada circunferência. Ela pode ser "desenrolada" em linha reta.','A linha representa toda a borda do círculo. Seu comprimento é C = π × d ≈ 3.14159 × d.','O diâmetro cabe 1×, 2× e 3× na borda. A sobra é 0.14×d. Somando: 3.14159... = π.','π não é arbitrário — é a razão exata entre a circunferência e o diâmetro de qualquer círculo.'],
+    e2:['','r² é a área de um quadrado de lado r. Usamos ele como "unidade" para medir o interior do círculo.','A área do círculo é equivalente a π cópias do quadrado r². Assim como C = π×d na borda, A = π×r² na área.','O quadrado r² cabe 1×, 2× e 3×. A sobra é 0.14×r². Total = 3.14159... = π.','A = π×r² — o mesmo π conecta tanto a borda quanto a área de qualquer círculo.'],
+    formula:'C = <span class="pi">π</span> × d &nbsp;|&nbsp; A = <span class="pi">π</span> × r²',
+    fnote:'// o mesmo π define tanto o comprimento da borda quanto a área do círculo',
+    btn1:'↺ Reiniciar circunferência', btn2:'↺ Reiniciar área',
+  },
+  en:{
+    title:'⚡ Avengers ⚡', sub:'Protocol π — Arc Reactor Analysis', langBtn:'PT',
+    s1:'Concept 1 — Circumference: C = π × d',
+    s2:'Concept 2 — Area: A = π × r²',
+    b:['⚙ Iron Man — 1×d','🛡 Cap — 2×d','⚡ Thor — 3×d','☢ Hulk — 0.14×d'],
+    a:['⚙ Iron Man — 1×r²','🛡 Cap — 2×r²','⚡ Thor — 3×r²','☢ Hulk — 0.14×r²'],
+    f1:['Initializing protocol π...','Arc Reactor detected. Analyzing circular geometry...','Unrolling circumference as energy beam...','Measuring segments: 1d, 2d, 3d and +0.14×d...','Analysis complete. C = π × d. The Reactor is mathematically perfect.'],
+    f2:['Initiating area analysis...','Computing area: each square has side r.','Fitting copies of r² into the circle...','Counting: 1r², 2r², 3r² and 0.14×r²...','Analysis complete. A = π × r². The same π governs both edge and area.'],
+    e1:['','The circle has diameter d = 2r and an edge called circumference. It can be "unrolled" into a straight line.','The line represents the full edge of the circle. Its length is C = π × d ≈ 3.14159 × d.','The diameter fits 1×, 2× and 3× along the edge. The remainder is 0.14×d. Total: 3.14159... = π.','π is not arbitrary — it is the exact ratio between the circumference and diameter of any circle.'],
+    e2:['','r² is the area of a square with side r. We use it as a "unit" to measure the interior of the circle.','The circle\'s area equals π copies of r². Just as C = π×d for the edge, A = π×r² for the area.','The r² square fits 1×, 2× and 3×. The remainder is 0.14×r². Total = 3.14159... = π.','A = π×r² — the same π connects both the edge and the area of any circle.'],
+    formula:'C = <span class="pi">π</span> × d &nbsp;|&nbsp; A = <span class="pi">π</span> × r²',
+    fnote:'// the same π defines both the circumference length and the circle\'s area',
+    btn1:'↺ Restart circumference', btn2:'↺ Restart area',
+  }
+};
+let lang='pt';
+function L(){ return T[lang]; }
+
+function applyLang(){
+  const l=L();
+  setText('t-title',l.title); setText('t-sub',l.sub);
+  document.getElementById('langBtn').textContent=l.langBtn;
+  setText('t-s1',l.s1); setText('t-s2',l.s2);
+  setHTML('t-formula',l.formula); setText('t-fnote',l.fnote);
+  setText('t-btn1',l.btn1); setText('t-btn2',l.btn2);
+  for(let i=0;i<4;i++){
+    setText('b'+i,l.b[i]); setText('a'+i,l.a[i]);
+  }
+  setText('msg1',l.f1[Math.min(ph1,4)]);
+  setText('msg2',l.f2[Math.min(ph2,4)]);
+  setText('ex1', l.e1[Math.min(ph1,4)]);
+  setText('ex2', l.e2[Math.min(ph2,4)]);
+}
+function setText(id,v){ document.getElementById(id).textContent=v; }
+function setHTML(id,v){ document.getElementById(id).innerHTML=v; }
+function toggleLang(){ lang=lang==='pt'?'en':'pt'; applyLang(); }
+
+// ═══════════════════════════════════════════════
+// BACKGROUND
+// ═══════════════════════════════════════════════
 ;(function(){
-  const bg = document.getElementById('bgc');
-  const bx = bg.getContext('2d');
+  const bg=document.getElementById('bgc'),bx=bg.getContext('2d');
   function resize(){ bg.width=innerWidth; bg.height=innerHeight; }
   resize(); window.addEventListener('resize',resize);
-  const pts = Array.from({length:35},()=>({
+  const pts=Array.from({length:32},()=>({
     x:Math.random()*innerWidth, y:Math.random()*innerHeight,
-    vx:(Math.random()-.5)*.35, vy:(Math.random()-.5)*.35,
-    r:Math.random()*1.8+.4,
-    hue:Math.random()<.5?'229,57,53':'245,166,35',
-    phase:Math.random()*6.28
+    vx:(Math.random()-.5)*.32, vy:(Math.random()-.5)*.32,
+    r:Math.random()*1.7+.4, c:Math.random()<.5?'229,57,53':'245,166,35', ph:Math.random()*6.28
   }));
   let f=0;
-  function bgLoop(){
+  function loop(){
     bx.clearRect(0,0,bg.width,bg.height);
-    // hex grid
-    const S=42;
-    const cols=Math.ceil(bg.width/(S*1.73))+2;
-    const rows=Math.ceil(bg.height/(S*1.5))+2;
+    const S=42,cols=Math.ceil(bg.width/(S*1.73))+2,rows=Math.ceil(bg.height/(S*1.5))+2;
     for(let r=0;r<rows;r++) for(let c=0;c<cols;c++){
-      const hx=c*S*1.73+(r%2?S*.865:0), hy=r*S*1.5;
+      const hx=c*S*1.73+(r%2?S*.865:0),hy=r*S*1.5;
       bx.beginPath();
-      for(let i=0;i<6;i++){
-        const a=Math.PI/180*(60*i-30);
-        i?bx.lineTo(hx+S*Math.cos(a),hy+S*Math.sin(a)):bx.moveTo(hx+S*Math.cos(a),hy+S*Math.sin(a));
-      }
+      for(let i=0;i<6;i++){const a=Math.PI/180*(60*i-30);i?bx.lineTo(hx+S*Math.cos(a),hy+S*Math.sin(a)):bx.moveTo(hx+S*Math.cos(a),hy+S*Math.sin(a));}
       bx.closePath();
-      const op=.012+.006*Math.sin(f*.018+c*.3+r*.5);
-      bx.strokeStyle=`rgba(229,57,53,${op})`; bx.lineWidth=.5; bx.stroke();
+      bx.strokeStyle=`rgba(229,57,53,${.01+.006*Math.sin(f*.017+c*.3+r*.5)})`; bx.lineWidth=.5; bx.stroke();
     }
-    // particles
     for(const p of pts){
-      p.x=(p.x+p.vx+bg.width)%bg.width;
-      p.y=(p.y+p.vy+bg.height)%bg.height;
-      const op=.15+.25*Math.sin(f*.04+p.phase);
+      p.x=(p.x+p.vx+bg.width)%bg.width; p.y=(p.y+p.vy+bg.height)%bg.height;
       bx.beginPath(); bx.arc(p.x,p.y,p.r,0,Math.PI*2);
-      bx.fillStyle=`rgba(${p.hue},${op})`; bx.fill();
+      bx.fillStyle=`rgba(${p.c},${.12+.22*Math.sin(f*.04+p.ph)})`; bx.fill();
     }
-    f++; requestAnimationFrame(bgLoop);
+    f++; requestAnimationFrame(loop);
   }
-  bgLoop();
+  loop();
 })();
 
-// ── main animation ────────────────────────────────────
-const cv=document.getElementById('c'), ctx=cv.getContext('2d');
-const W=720,H=320;
-const R=68, CX=118,CY=152, D=R*2, C=Math.PI*D;
-const LX=230, LY=242;
-const SCOLS=['#e53935','#1976d2','#f5a623','#43a047'];
-const segs=[[LX,LX+D],[LX+D,LX+2*D],[LX+2*D,LX+3*D],[LX+3*D,LX+C]];
-const LINES=['Inicializando protocolo π...','Reator Arc detectado. Analisando geometria...','Desenrolando circunferência como feixe de energia...','Medindo segmentos em diâmetros: 1d... 2d... 3d... +0.14×d','Análise completa. C = π × d. O Reator Arc é matematicamente perfeito.'];
+// ═══════════════════════════════════════════════
+// SHARED HELPERS
+// ═══════════════════════════════════════════════
+function ease(t){ return t<.5?2*t*t:-1+(4-2*t)*t; }
+function cl(v,a,b){ return Math.max(a,Math.min(b,v)); }
 
-let ph=0,t=0,gl=0,rafId,done=false;
-const DUR=[60,80,120,160];
-
-function ease(t){return t<.5?2*t*t:-1+(4-2*t)*t}
-function cl(v,a,b){return Math.max(a,Math.min(b,v))}
-
-function reactor(cx,cy,r){
-  gl++;
+function drawReactor(ctx,cx,cy,r,gl){
   const g=.35+.2*Math.sin(gl*.06);
-  // outer glow
   const og=ctx.createRadialGradient(cx,cy,r*.7,cx,cy,r*2);
   og.addColorStop(0,`rgba(79,195,247,${g*.12})`); og.addColorStop(1,'transparent');
   ctx.beginPath(); ctx.arc(cx,cy,r*2,0,Math.PI*2); ctx.fillStyle=og; ctx.fill();
-  // rings
   for(const[rr,op] of [[1,.6+g*.3],[.74,.35+g*.2],[.49,.45+g*.3]]){
     ctx.beginPath(); ctx.arc(cx,cy,r*rr,0,Math.PI*2);
     ctx.strokeStyle=`rgba(79,195,247,${op})`; ctx.lineWidth=2; ctx.stroke();
   }
-  // spokes + triangle
   for(let i=0;i<3;i++){
     const a=(i/3)*Math.PI*2-Math.PI/2+gl*.002;
-    const x1=cx+Math.cos(a)*r*.22, y1=cy+Math.sin(a)*r*.22;
-    const x2=cx+Math.cos(a)*r*.7,  y2=cy+Math.sin(a)*r*.7;
+    const x1=cx+Math.cos(a)*r*.22,y1=cy+Math.sin(a)*r*.22;
+    const x2=cx+Math.cos(a)*r*.7, y2=cy+Math.sin(a)*r*.7;
     ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2);
     ctx.strokeStyle=`rgba(79,195,247,${.5+g*.2})`; ctx.lineWidth=1.5; ctx.stroke();
     const b=a+Math.PI*2/3;
-    ctx.beginPath(); ctx.moveTo(x2,y2);
-    ctx.lineTo(cx+Math.cos(b)*r*.5,cy+Math.sin(b)*r*.5);
-    ctx.strokeStyle=`rgba(79,195,247,${.2+g*.15})`; ctx.lineWidth=1; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x2,y2); ctx.lineTo(cx+Math.cos(b)*r*.5,cy+Math.sin(b)*r*.5);
+    ctx.strokeStyle=`rgba(79,195,247,${.18+g*.1})`; ctx.lineWidth=1; ctx.stroke();
   }
-  // core
   const cg=ctx.createRadialGradient(cx,cy,0,cx,cy,r*.26);
   cg.addColorStop(0,`rgba(140,230,255,${.7+g*.25})`);
   cg.addColorStop(.6,`rgba(79,195,247,${.35+g*.15})`);
@@ -159,152 +223,249 @@ function reactor(cx,cy,r){
   ctx.beginPath(); ctx.arc(cx,cy,3,0,Math.PI*2); ctx.fillStyle='#fff'; ctx.fill();
 }
 
-function diameter(a){
-  ctx.save(); ctx.globalAlpha=a;
-  ctx.beginPath(); ctx.moveTo(CX-R,CY); ctx.lineTo(CX+R,CY);
-  ctx.strokeStyle='#f5a623'; ctx.lineWidth=2; ctx.stroke();
-  for(const[x,d] of [[CX-R,-1],[CX+R,1]]){
-    ctx.beginPath(); ctx.moveTo(x,CY); ctx.lineTo(x-d*8,CY-4); ctx.lineTo(x-d*8,CY+4);
-    ctx.closePath(); ctx.fillStyle='#f5a623'; ctx.fill();
+// ═══════════════════════════════════════════════
+// SEÇÃO 1 — CIRCUNFERÊNCIA
+// ═══════════════════════════════════════════════
+const c1=document.getElementById('c1'), x1=c1.getContext('2d');
+const W1=720,H1=308;
+const R1=68,CX1=118,CY1=148,D1=R1*2,C1=Math.PI*D1;
+const LX1=228,LY1=236;
+const SC=['#e53935','#1976d2','#f5a623','#43a047'];
+const sg1=[[LX1,LX1+D1],[LX1+D1,LX1+2*D1],[LX1+2*D1,LX1+3*D1],[LX1+3*D1,LX1+C1]];
+const DUR1=[60,80,120,155];
+let ph1=0,t_1=0,gl1=0,id1,done1=false;
+
+function drawDiam(alpha){
+  x1.save(); x1.globalAlpha=alpha;
+  x1.beginPath(); x1.moveTo(CX1-R1,CY1); x1.lineTo(CX1+R1,CY1);
+  x1.strokeStyle='#f5a623'; x1.lineWidth=2; x1.stroke();
+  for(const[x,d] of [[CX1-R1,-1],[CX1+R1,1]]){
+    x1.beginPath(); x1.moveTo(x,CY1); x1.lineTo(x-d*8,CY1-4); x1.lineTo(x-d*8,CY1+4);
+    x1.closePath(); x1.fillStyle='#f5a623'; x1.fill();
   }
-  ctx.fillStyle='#f5a623'; ctx.font='bold 13px Courier New';
-  ctx.textAlign='center'; ctx.fillText('d = 2r',CX,CY-12);
-  ctx.setLineDash([3,3]); ctx.strokeStyle='rgba(245,166,35,.35)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(CX,CY); ctx.lineTo(CX,CY-R); ctx.stroke();
-  ctx.setLineDash([]);
-  ctx.fillStyle='rgba(245,166,35,.6)'; ctx.font='12px Courier New';
-  ctx.textAlign='left'; ctx.fillText('r',CX+5,CY-R/2+5);
-  ctx.restore();
+  x1.fillStyle='#f5a623'; x1.font='bold 12px Courier New'; x1.textAlign='center'; x1.fillText('d = 2r',CX1,CY1-13);
+  x1.setLineDash([3,3]); x1.strokeStyle='rgba(245,166,35,.35)'; x1.lineWidth=1;
+  x1.beginPath(); x1.moveTo(CX1,CY1); x1.lineTo(CX1,CY1-R1); x1.stroke(); x1.setLineDash([]);
+  x1.fillStyle='rgba(245,166,35,.6)'; x1.font='11px Courier New'; x1.textAlign='left'; x1.fillText('r',CX1+5,CY1-R1/2+4);
+  x1.restore();
 }
 
-function arc(p){
-  ctx.save(); ctx.shadowBlur=14; ctx.shadowColor='#e53935';
-  ctx.beginPath(); ctx.arc(CX,CY,R,-Math.PI/2,-Math.PI/2+Math.PI*2*p);
-  ctx.strokeStyle='#e53935'; ctx.lineWidth=4; ctx.stroke();
-  ctx.restore();
+function drawArc1(p){
+  x1.save(); x1.shadowBlur=14; x1.shadowColor='#e53935';
+  x1.beginPath(); x1.arc(CX1,CY1,R1,-Math.PI/2,-Math.PI/2+Math.PI*2*p);
+  x1.strokeStyle='#e53935'; x1.lineWidth=4; x1.stroke(); x1.restore();
 }
 
-function beam(len){
+function drawBeam(len){
   if(len<=0)return;
-  ctx.save(); ctx.shadowBlur=12; ctx.shadowColor='#4fc3f7';
-  ctx.beginPath(); ctx.moveTo(LX,LY); ctx.lineTo(LX+len,LY);
-  ctx.strokeStyle='rgba(79,195,247,.55)'; ctx.lineWidth=7; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(LX,LY); ctx.lineTo(LX+len,LY);
-  ctx.strokeStyle='rgba(200,245,255,.9)'; ctx.lineWidth=1.5; ctx.stroke();
-  const tg=ctx.createRadialGradient(LX+len,LY,0,LX+len,LY,12);
+  x1.save(); x1.shadowBlur=12; x1.shadowColor='#4fc3f7';
+  x1.beginPath(); x1.moveTo(LX1,LY1); x1.lineTo(LX1+len,LY1);
+  x1.strokeStyle='rgba(79,195,247,.5)'; x1.lineWidth=7; x1.stroke();
+  x1.beginPath(); x1.moveTo(LX1,LY1); x1.lineTo(LX1+len,LY1);
+  x1.strokeStyle='rgba(200,245,255,.9)'; x1.lineWidth=1.5; x1.stroke();
+  const tg=x1.createRadialGradient(LX1+len,LY1,0,LX1+len,LY1,12);
   tg.addColorStop(0,'rgba(200,245,255,.8)'); tg.addColorStop(1,'transparent');
-  ctx.beginPath(); ctx.arc(LX+len,LY,12,0,Math.PI*2); ctx.fillStyle=tg; ctx.fill();
-  // counter in reactor
-  const val=(len/R/2).toFixed(2);
-  ctx.fillStyle='rgba(79,195,247,.9)'; ctx.font='bold 16px Courier New';
-  ctx.textAlign='center'; ctx.fillText(val,CX,CY+6);
-  ctx.font='10px Courier New'; ctx.fillStyle='rgba(79,195,247,.6)';
-  ctx.fillText('×d',CX,CY+20);
-  ctx.restore();
+  x1.beginPath(); x1.arc(LX1+len,LY1,12,0,Math.PI*2); x1.fillStyle=tg; x1.fill();
+  x1.fillStyle='rgba(79,195,247,.9)'; x1.font='bold 15px Courier New'; x1.textAlign='center';
+  x1.fillText((len/R1/2).toFixed(2),CX1,CY1+6);
+  x1.font='10px Courier New'; x1.fillStyle='rgba(79,195,247,.6)'; x1.fillText('×d',CX1,CY1+19);
+  x1.restore();
 }
 
-function segments(p){
-  const filled=C*p;
+function drawSegs1(p){
+  const filled=C1*p;
   for(let i=0;i<4;i++){
-    const[x0,x1]=segs[i], len=x1-x0;
-    const drawn=cl(filled-(x0-LX),0,len);
+    const[x0,x2]=sg1[i],len=x2-x0,drawn=cl(filled-(x0-LX1),0,len);
     if(drawn<=0)continue;
-    ctx.save(); ctx.shadowBlur=8; ctx.shadowColor=SCOLS[i];
-    ctx.beginPath(); ctx.moveTo(x0,LY); ctx.lineTo(x0+drawn,LY);
-    ctx.strokeStyle=SCOLS[i]; ctx.lineWidth=5; ctx.stroke();
-    ctx.restore();
-    ctx.beginPath(); ctx.moveTo(x0,LY); ctx.lineTo(x0+drawn,LY);
-    ctx.strokeStyle='rgba(255,255,255,.35)'; ctx.lineWidth=1.2; ctx.stroke();
+    x1.save(); x1.shadowBlur=8; x1.shadowColor=SC[i];
+    x1.beginPath(); x1.moveTo(x0,LY1); x1.lineTo(x0+drawn,LY1);
+    x1.strokeStyle=SC[i]; x1.lineWidth=5; x1.stroke(); x1.restore();
+    x1.beginPath(); x1.moveTo(x0,LY1); x1.lineTo(x0+drawn,LY1);
+    x1.strokeStyle='rgba(255,255,255,.28)'; x1.lineWidth=1.2; x1.stroke();
     if(drawn>=len*.5) document.getElementById('b'+i).classList.add('on');
     if(drawn>=len-1){
-      ctx.fillStyle=SCOLS[i]; ctx.font='bold 11px Courier New';
-      ctx.textAlign='center';
-      ctx.fillText(i<3?`${i+1}×d`:'0.14×d',(x0+x1)/2,LY-15);
-      ctx.strokeStyle=SCOLS[i]; ctx.lineWidth=1.5;
-      ctx.beginPath(); ctx.moveTo(x1,LY-8); ctx.lineTo(x1,LY+8); ctx.stroke();
+      x1.fillStyle=SC[i]; x1.font='bold 11px Courier New'; x1.textAlign='center';
+      x1.fillText(i<3?`${i+1}×d`:'0.14×d',(x0+x2)/2,LY1-15);
+      x1.strokeStyle=SC[i]; x1.lineWidth=1.5;
+      x1.beginPath(); x1.moveTo(x2,LY1-8); x1.lineTo(x2,LY1+8); x1.stroke();
     }
   }
-  ctx.strokeStyle='rgba(255,255,255,.25)'; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(LX,LY-8); ctx.lineTo(LX,LY+8); ctx.stroke();
+  x1.strokeStyle='rgba(255,255,255,.2)'; x1.lineWidth=1.5;
+  x1.beginPath(); x1.moveTo(LX1,LY1-8); x1.lineTo(LX1,LY1+8); x1.stroke();
 }
 
-function brace(a){
+function drawBrace1(a){
   if(a<=0)return;
-  ctx.save(); ctx.globalAlpha=a;
-  const y=LY+26;
-  ctx.strokeStyle='rgba(245,166,35,.7)'; ctx.lineWidth=1.5;
-  ctx.beginPath();
-  ctx.moveTo(LX,y); ctx.lineTo(LX,y+7);
-  ctx.moveTo(LX,y+7); ctx.lineTo(LX+C,y+7);
-  ctx.moveTo(LX+C,y+7); ctx.lineTo(LX+C,y);
-  ctx.stroke();
-  ctx.fillStyle='#f5a623'; ctx.font='bold 13px Courier New';
-  ctx.textAlign='center';
-  ctx.fillText('C = π × d  ≈  3.14159 × d',LX+C/2,y+22);
-  ctx.restore();
+  x1.save(); x1.globalAlpha=a;
+  const y=LY1+26;
+  x1.strokeStyle='rgba(245,166,35,.7)'; x1.lineWidth=1.5;
+  x1.beginPath(); x1.moveTo(LX1,y); x1.lineTo(LX1,y+7); x1.moveTo(LX1,y+7); x1.lineTo(LX1+C1,y+7); x1.moveTo(LX1+C1,y+7); x1.lineTo(LX1+C1,y); x1.stroke();
+  x1.fillStyle='#f5a623'; x1.font='bold 12px Courier New'; x1.textAlign='center';
+  x1.fillText('C = π × d  ≈  3.14159 × d',LX1+C1/2,y+22); x1.restore();
 }
 
-function hud(){
-  ctx.fillStyle='rgba(229,57,53,.6)'; ctx.font='10px Courier New';
-  ctx.textAlign='left'; ctx.fillText('STARK INDUSTRIES // FRIDAY v4.1',10,15);
-  ctx.fillStyle='rgba(245,166,35,.45)'; ctx.textAlign='right';
-  ctx.fillText(`FASE ${ph+1}/5`,W-10,15);
-  ctx.fillStyle='rgba(79,195,247,.3)'; ctx.textAlign='left';
-  ctx.fillText('π = 3.14159265...',10,H-10);
+function drawHUD1(){
+  x1.fillStyle='rgba(229,57,53,.5)'; x1.font='9px Courier New'; x1.textAlign='left'; x1.fillText('STARK INDUSTRIES // FRIDAY v4.1',10,14);
+  x1.fillStyle='rgba(245,166,35,.38)'; x1.textAlign='right'; x1.fillText(`FASE ${ph1+1}/5`,W1-10,14);
 }
 
-function draw(){
-  ctx.clearRect(0,0,W,H);
-  hud();
-  const p=ease(cl(t,0,1));
-  if(ph===0){ // boot scan
-    ctx.save(); ctx.globalAlpha=p;
-    const y=H*p;
-    const sg=ctx.createLinearGradient(0,y,W,y);
+function frame1(){
+  x1.clearRect(0,0,W1,H1); gl1++; drawHUD1();
+  const p=ease(cl(t_1,0,1));
+  if(ph1===0){
+    x1.save(); x1.globalAlpha=p;
+    const y=H1*p,sg=x1.createLinearGradient(0,y,W1,y);
     sg.addColorStop(0,'transparent'); sg.addColorStop(.5,'rgba(229,57,53,.5)'); sg.addColorStop(1,'transparent');
-    ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y);
-    ctx.strokeStyle=sg; ctx.lineWidth=2; ctx.stroke();
-    if(Math.sin(p*30)>0){
-      ctx.fillStyle='rgba(245,166,35,.7)'; ctx.font='bold 13px Courier New';
-      ctx.textAlign='center'; ctx.fillText('STARK TECH ONLINE — INICIALIZANDO π',W/2,H/2);
-    }
-    ctx.restore();
+    x1.beginPath(); x1.moveTo(0,y); x1.lineTo(W1,y); x1.strokeStyle=sg; x1.lineWidth=2; x1.stroke();
+    if(Math.sin(p*28)>0){ x1.fillStyle='rgba(245,166,35,.7)'; x1.font='bold 12px Courier New'; x1.textAlign='center'; x1.fillText('STARK TECH ONLINE — INICIALIZANDO π',W1/2,H1/2); }
+    x1.restore();
   }
-  if(ph>=1){ reactor(CX,CY,R); }
-  if(ph===1){ diameter(p); }
-  if(ph>=2){ diameter(1); }
-  if(ph===2){ arc(p); beam(p*C); }
-  if(ph>=3){
-    arc(1);
-    const sp=done?1:p;
-    segments(sp);
-    brace(done?1:cl((p-.85)/.15,0,1));
-  }
+  if(ph1>=1) drawReactor(x1,CX1,CY1,R1,gl1);
+  if(ph1===1) drawDiam(p);
+  if(ph1>=2) drawDiam(1);
+  if(ph1===2){ drawArc1(p); drawBeam(p*C1); }
+  if(ph1>=3){ drawArc1(1); drawSegs1(done1?1:p); drawBrace1(done1?1:cl((p-.85)/.15,0,1)); }
 }
 
-function tick(){
-  draw();
-  t+=1/DUR[ph];
-  if(t>=1){
-    t=0;
-    if(ph<4) ph++;
-    if(ph===4) done=true;
-    document.getElementById('msg').textContent=LINES[ph]||LINES[4];
+function tick1(){
+  frame1(); t_1+=1/DUR1[ph1];
+  if(t_1>=1){
+    t_1=0; if(ph1<4) ph1++;
+    if(ph1===4) done1=true;
+    setText('msg1',L().f1[ph1]||L().f1[4]);
+    setText('ex1', L().e1[ph1]||L().e1[4]);
   }
-  rafId=requestAnimationFrame(ph<4?tick:loop);
+  id1=requestAnimationFrame(ph1<4?tick1:loop1);
 }
+function loop1(){ frame1(); id1=requestAnimationFrame(loop1); }
 
-function loop(){ draw(); rafId=requestAnimationFrame(loop); }
-
-function restart(){
-  cancelAnimationFrame(rafId);
-  ph=0; t=0; gl=0; done=false;
+function restart1(){
+  cancelAnimationFrame(id1); ph1=0; t_1=0; done1=false;
   ['b0','b1','b2','b3'].forEach(id=>document.getElementById(id).classList.remove('on'));
-  document.getElementById('msg').textContent=LINES[0];
-  rafId=requestAnimationFrame(tick);
+  setText('msg1',L().f1[0]); setText('ex1',L().e1[0]);
+  id1=requestAnimationFrame(tick1);
 }
 
-restart();
+// ═══════════════════════════════════════════════
+// SEÇÃO 2 — ÁREA
+// ═══════════════════════════════════════════════
+const c2=document.getElementById('c2'), x2=c2.getContext('2d');
+const W2=720,H2=272;
+const R2=60,CX2=108,CY2=130;
+const SQ=86; // tamanho visual de cada r² (86×86 px)
+const LX2=264,SQY=CY2-SQ/2; // top do quadrado
+const ATOT=Math.PI*SQ; // largura total = π × SQ ≈ 270px
+const sg2=[[LX2,LX2+SQ],[LX2+SQ,LX2+2*SQ],[LX2+2*SQ,LX2+3*SQ],[LX2+3*SQ,LX2+ATOT]];
+const DUR2=[55,75,115,150];
+let ph2=0,t_2=0,gl2=0,id2,done2=false;
+
+function drawRadLabel(a){
+  x2.save(); x2.globalAlpha=a;
+  x2.setLineDash([3,3]); x2.strokeStyle='rgba(245,166,35,.5)'; x2.lineWidth=1;
+  x2.beginPath(); x2.moveTo(CX2,CY2); x2.lineTo(CX2+R2,CY2); x2.stroke(); x2.setLineDash([]);
+  x2.fillStyle='#f5a623'; x2.font='bold 12px Courier New'; x2.textAlign='center'; x2.fillText('r',CX2+R2/2,CY2-8);
+  // r² reference box (only in phase 1)
+  if(ph2<=1){
+    const bx=CX2+R2+18, by=CY2-R2/2;
+    x2.strokeStyle='rgba(245,166,35,.65)'; x2.lineWidth=1.5; x2.strokeRect(bx,by,R2,R2);
+    x2.fillStyle='rgba(245,166,35,.07)'; x2.fillRect(bx,by,R2,R2);
+    x2.fillStyle='#f5a623'; x2.font='bold 13px Courier New'; x2.textAlign='center'; x2.fillText('r²',bx+R2/2,CY2+5);
+    x2.font='9px Courier New'; x2.fillStyle='rgba(245,166,35,.5)'; x2.fillText(`${R2}×${R2}`,bx+R2/2,CY2+18);
+  }
+  x2.fillStyle='rgba(245,166,35,.5)'; x2.font='18px Courier New'; x2.textAlign='center'; x2.fillText('→',LX2-22,CY2+6);
+  x2.restore();
+}
+
+function drawSegs2(p){
+  const filled=ATOT*p;
+  for(let i=0;i<4;i++){
+    const[x0,xE]=sg2[i],w=xE-x0,drawn=cl(filled-(x0-LX2),0,w);
+    if(drawn<=0)continue;
+    // fill rect
+    x2.save(); x2.shadowBlur=8; x2.shadowColor=SC[i];
+    x2.fillStyle=SC[i]; x2.globalAlpha=.65; x2.fillRect(x0,SQY,drawn,SQ); x2.restore();
+    x2.strokeStyle=SC[i]; x2.lineWidth=2; x2.strokeRect(x0,SQY,drawn,SQ);
+    // grid lines inside full segments
+    if(i<3 && drawn>=w-1){
+      x2.strokeStyle='rgba(255,255,255,.08)'; x2.lineWidth=.5;
+      for(let gx=x0;gx<x0+w;gx+=10){ x2.beginPath(); x2.moveTo(gx,SQY); x2.lineTo(gx,SQY+SQ); x2.stroke(); }
+      for(let gy=SQY;gy<SQY+SQ;gy+=10){ x2.beginPath(); x2.moveTo(x0,gy); x2.lineTo(x0+w,gy); x2.stroke(); }
+    }
+    if(drawn>=w*.5) document.getElementById('a'+i).classList.add('on');
+    if(drawn>=w-1){
+      x2.fillStyle=SC[i]; x2.font='bold 11px Courier New'; x2.textAlign='center';
+      x2.fillText(i<3?`${i+1}×r²`:'0.14×r²',(x0+xE)/2,SQY-14);
+      x2.strokeStyle=SC[i]; x2.lineWidth=1.5;
+      x2.beginPath(); x2.moveTo(xE,SQY-6); x2.lineTo(xE,SQY+SQ+6); x2.stroke();
+    }
+  }
+  x2.strokeStyle='rgba(255,255,255,.2)'; x2.lineWidth=1.5;
+  x2.beginPath(); x2.moveTo(LX2,SQY-6); x2.lineTo(LX2,SQY+SQ+6); x2.stroke();
+}
+
+function drawBrace2(a){
+  if(a<=0)return;
+  x2.save(); x2.globalAlpha=a;
+  const y=SQY+SQ+22;
+  x2.strokeStyle='rgba(245,166,35,.7)'; x2.lineWidth=1.5;
+  x2.beginPath(); x2.moveTo(LX2,y); x2.lineTo(LX2,y+7); x2.moveTo(LX2,y+7); x2.lineTo(LX2+ATOT,y+7); x2.moveTo(LX2+ATOT,y+7); x2.lineTo(LX2+ATOT,y); x2.stroke();
+  x2.fillStyle='#f5a623'; x2.font='bold 12px Courier New'; x2.textAlign='center';
+  x2.fillText('A = π × r²  ≈  3.14159 × r²',LX2+ATOT/2,y+22); x2.restore();
+}
+
+function drawHUD2(){
+  x2.fillStyle='rgba(229,57,53,.5)'; x2.font='9px Courier New'; x2.textAlign='left'; x2.fillText('STARK INDUSTRIES // FRIDAY v4.1',10,14);
+  x2.fillStyle='rgba(245,166,35,.38)'; x2.textAlign='right'; x2.fillText(`FASE ${ph2+1}/5`,W2-10,14);
+}
+
+function frame2(){
+  x2.clearRect(0,0,W2,H2); gl2++; drawHUD2();
+  const p=ease(cl(t_2,0,1));
+  if(ph2===0){
+    x2.save(); x2.globalAlpha=p;
+    const y=H2*p,sg=x2.createLinearGradient(0,y,W2,y);
+    sg.addColorStop(0,'transparent'); sg.addColorStop(.5,'rgba(229,57,53,.45)'); sg.addColorStop(1,'transparent');
+    x2.beginPath(); x2.moveTo(0,y); x2.lineTo(W2,y); x2.strokeStyle=sg; x2.lineWidth=2; x2.stroke();
+    if(Math.sin(p*28)>0){ x2.fillStyle='rgba(245,166,35,.7)'; x2.font='bold 12px Courier New'; x2.textAlign='center'; x2.fillText('INICIANDO ANÁLISE DE ÁREA',W2/2,H2/2); }
+    x2.restore();
+  }
+  if(ph2>=1) drawReactor(x2,CX2,CY2,R2,gl2);
+  if(ph2===1) drawRadLabel(p);
+  if(ph2>=2) drawRadLabel(1);
+  if(ph2===2){
+    x2.fillStyle='rgba(79,195,247,.9)'; x2.font='bold 15px Courier New'; x2.textAlign='center';
+    x2.fillText((p*Math.PI).toFixed(2),CX2,CY2+6);
+    x2.font='10px Courier New'; x2.fillStyle='rgba(79,195,247,.6)'; x2.fillText('×r²',CX2,CY2+19);
+    drawSegs2(p);
+  }
+  if(ph2>=3){ drawSegs2(done2?1:p); drawBrace2(done2?1:cl((p-.85)/.15,0,1)); }
+}
+
+function tick2(){
+  frame2(); t_2+=1/DUR2[ph2];
+  if(t_2>=1){
+    t_2=0; if(ph2<4) ph2++;
+    if(ph2===4) done2=true;
+    setText('msg2',L().f2[ph2]||L().f2[4]);
+    setText('ex2', L().e2[ph2]||L().e2[4]);
+  }
+  id2=requestAnimationFrame(ph2<4?tick2:loop2);
+}
+function loop2(){ frame2(); id2=requestAnimationFrame(loop2); }
+
+function restart2(){
+  cancelAnimationFrame(id2); ph2=0; t_2=0; done2=false;
+  ['a0','a1','a2','a3'].forEach(id=>document.getElementById(id).classList.remove('on'));
+  setText('msg2',L().f2[0]); setText('ex2',L().e2[0]);
+  id2=requestAnimationFrame(tick2);
+}
+
+// ═══════════════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════════════
+applyLang();
+restart1();
+setTimeout(()=>restart2(),800); // leve delay para não sobrecarregar no início
 </script>
 </body>
 </html>

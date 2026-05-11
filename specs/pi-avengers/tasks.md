@@ -69,10 +69,24 @@
   - Badges dos personagens para a seção de área
   - Narração FRIDAY separada para cada conceito
 
-## Fase 6 — Backlog Restante
+## Fase 6 — Implementada
 
-- [ ] Adicionar trilha sonora ou efeitos sonoros (beep HUD, som de reator) via Web Audio API
-- [ ] Animação de outros personagens com outros conceitos matemáticos (ex: Série de Taylor, números de Euler)
+- [x] Sons via Web Audio API com botão mute/unmute no header
+  - Boot beep (ascending), tons por segmento de personagem, beep por barra de Leibniz, fanfare de conclusão, som místico para o portal
+- [x] Terceira seção: Série de Leibniz com tema Doutor Estranho / Kamar-Taj
+  - Portal animado com anéis giratórios (roxo/laranja), faíscas e núcleo dourado
+  - Barras animadas mostrando termos +1, −1/3, +1/5, −1/7... convergindo para π/4
+  - Linha tracejada indicando o alvo π/4 ≈ 0.785
+  - Ponto dourado rastreando a soma parcial
+  - Resultado final: soma × 4 = π ≈ 3.14159
+  - Narrador "WONG AI" no lugar do FRIDAY
+  - Badges: Termos positivos, Termos negativos, Convergência → π
+  - Sons místicos ao reiniciar
+
+## Fase 7 — Backlog
+
+- [ ] Sons contínuos: reator Arc com hum grave enquanto a página está aberta
+- [ ] Modo apresentação: avança fases com barra de espaço ou seta
 
 ---
 

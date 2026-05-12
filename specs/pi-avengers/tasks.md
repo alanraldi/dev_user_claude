@@ -87,6 +87,7 @@
 
 - [x] Sons contínuos: reator Arc com hum grave enquanto a página está aberta
 - [x] Modo apresentação: avança fases com barra de espaço ou seta
+- [x] Incluir fonte cientifica da variavel "pi"
 
 ---
 

@@ -60,6 +60,11 @@ canvas{display:block;width:100%;height:auto}
 .btn.strange-btn:hover{background:#7b1fa2;color:#fff;box-shadow:0 0 14px rgba(123,31,162,.5)}
 .digits{color:#1e2535;font-size:clamp(.65rem,2vw,.75rem);letter-spacing:2px;text-align:center}
 .digits span{color:#f5a623}
+.refs{width:100%;text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(229,57,53,.18)}
+.refs-title{font-size:clamp(.55rem,1.6vw,.65rem);letter-spacing:3px;color:rgba(229,57,53,.5);text-transform:uppercase;margin-bottom:6px}
+.refs-body{font-size:clamp(.62rem,1.8vw,.72rem);color:#7a8eaa;line-height:1.8}
+.refs a{color:#f5a623;text-decoration:none}
+.refs a:hover{color:#e53935}
 </style>
 </head>
 <body>
@@ -124,6 +129,10 @@ canvas{display:block;width:100%;height:auto}
     <button class="btn strange-btn" id="t-btn3" onclick="restart3()"></button>
   </div>
   <div class="digits"><span>π</span> = 3.14159 26535 89793 23846 26433 83279 50288...</div>
+  <div class="refs">
+    <div class="refs-title" id="refs-title"></div>
+    <div class="refs-body" id="refs-body"></div>
+  </div>
 </div>
 
 <script>
@@ -148,6 +157,9 @@ const T={
     formula:'C=<span class="pi">π</span>×d &nbsp;|&nbsp; A=<span class="pi">π</span>×r² &nbsp;|&nbsp; <span class="pu">π</span>=4×(1−1/3+1/5−…)',
     fnote:'// o mesmo π aparece na geometria e nas séries infinitas',
     btn1:'↺ Circunferência',btn2:'↺ Área',btn3:'✦ Reinvocar Leibniz',
+    refTitle:'REFERÊNCIAS',
+    ref1:'[1] Weisstein, Eric W. <a href="https://mathworld.wolfram.com/Pi.html" target="_blank" rel="noopener">Pi — Wolfram MathWorld</a>',
+    ref2:'[2] <a href="https://pt.wikipedia.org/wiki/Pi" target="_blank" rel="noopener">Pi — Wikipédia</a>',
   },
   en:{
     title:'⚡ Avengers ⚡',sub:'Protocol π — Arc Reactor Analysis',langBtn:'PT',
@@ -166,6 +178,9 @@ const T={
     formula:'C=<span class="pi">π</span>×d &nbsp;|&nbsp; A=<span class="pi">π</span>×r² &nbsp;|&nbsp; <span class="pu">π</span>=4×(1−1/3+1/5−…)',
     fnote:'// the same π appears in geometry and in infinite series',
     btn1:'↺ Circumference',btn2:'↺ Area',btn3:'✦ Re-invoke Leibniz',
+    refTitle:'REFERENCES',
+    ref1:'[1] Weisstein, Eric W. <a href="https://mathworld.wolfram.com/Pi.html" target="_blank" rel="noopener">Pi — Wolfram MathWorld</a>',
+    ref2:'[2] <a href="https://en.wikipedia.org/wiki/Pi" target="_blank" rel="noopener">Pi — Wikipedia</a>',
   }
 };
 let lang='pt';
@@ -185,6 +200,7 @@ function applyLang(){
   setText('msg1',l.f1[Math.min(ph1,4)]); setText('ex1',l.e1[Math.min(ph1,4)]);
   setText('msg2',l.f2[Math.min(ph2,4)]); setText('ex2',l.e2[Math.min(ph2,4)]);
   setText('msg3',l.f3[Math.min(ph3,4)]); setText('ex3',l.e3[Math.min(ph3,4)]);
+  setText('refs-title',l.refTitle); setHTML('refs-body',l.ref1+'<br>'+l.ref2);
 }
 function toggleLang(){ lang=lang==='pt'?'en':'pt'; applyLang(); }
 

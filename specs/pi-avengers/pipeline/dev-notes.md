@@ -68,3 +68,47 @@ Bloco após `// TASK 7.2`, logo depois do bloco `INIT` (fim do arquivo, antes de
 | Botões prev/next na tela | Fora do escopo — po-brief.md Task 7.2, seção "Fora do Escopo" |
 | Variar timbre/frequência do hum por seção | Fora do escopo — po-brief.md Task 7.1, seção "Fora do Escopo" |
 | Reset de `barsDone` ao recuar Seção 3 | Não é regressão visual crítica; resetar exigiria duplicar lógica de `restart3()`, o que quebraria a regra "não refatore código que não é necessário para a tarefa" |
+
+---
+
+## Task 7.3 — Fonte Científica da Variável "pi"
+
+**Data:** 2026-05-12
+
+### O que foi implementado
+
+Seção de referências científicas (`<div class="refs">`) adicionada abaixo do bloco `.digits`, com título internacionalizado e duas referências numeradas com links funcionais para Wolfram MathWorld e Wikipedia (PT/EN). A seção é populada e atualizada pelo sistema de internacionalização existente a cada chamada de `applyLang()`.
+
+### Onde no código
+
+- **CSS** (linhas 63–67 do arquivo editado): classes `.refs`, `.refs-title`, `.refs-body`, `.refs a`, `.refs a:hover` inseridas após `.digits span{...}`, antes de `</style>`
+- **HTML** (após `<div class="digits">`): `<div class="refs">` com filhos `id="refs-title"` e `id="refs-body"`, dentro do `.wrap`, antes do `</div>` de fechamento
+- **`T.pt`** (após `btn3`): chaves `refTitle`, `ref1`, `ref2` com link para `pt.wikipedia.org/wiki/Pi`
+- **`T.en`** (após `btn3`): mesmas chaves com link para `en.wikipedia.org/wiki/Pi`
+- **`applyLang()`** (última linha do bloco): `setText('refs-title',l.refTitle); setHTML('refs-body',l.ref1+'<br>'+l.ref2);`
+
+### Decisões técnicas
+
+- **`id="refs-body"` em vez de `id="refs"`**: o brief apresenta ambas as opções em pontos diferentes; o elemento HTML especificado na seção "HTML a inserir" usa `refs-body`, que é o valor correto e foi usado consistentemente em HTML, CSS e JS.
+- **`setText` para título, `setHTML` para corpo**: o título é texto puro (sem markup), então `setText` é mais seguro. O corpo contém tags `<a>`, portanto `setHTML` é obrigatório — as strings vêm do objeto `T` controlado pelo desenvolvedor, sem entrada do usuário.
+- **`border-top` em CSS em vez de `<div class="hr">`**: mantém o HTML mínimo. O `.hr` existente é para o header; criar um novo elemento div apenas para separador seria desnecessário.
+- **`rel="noopener"`** em todos os 4 links: segurança contra `window.opener` hijacking, conforme restrição técnica do brief.
+
+### O que NÃO foi implementado (e por quê)
+
+- Terceira referência (livro, NIST, Britannica): explicitamente fora do escopo no brief.
+- Seção "Sobre" ou "Créditos": fora do escopo.
+
+---
+
+## Riscos e pontos de atenção para o QA (Task 7.3)
+
+- **Troca de idioma PT → EN**: verificar que os links de Wikipedia mudam de `pt.wikipedia.org` para `en.wikipedia.org`
+- **Mobile (375px)**: verificar que o texto longo de `ref1` quebra linha naturalmente sem transbordar horizontalmente
+- **Links**: confirmar `target="_blank"` e `rel="noopener"` presentes nos 4 links (2 idiomas × 2 referências)
+- **Estado inicial**: confirmar que `applyLang()` é chamada no carregamento e popula a seção corretamente antes de qualquer interação
+- **Regressão**: confirmar que animações canvas, sons e botões existentes não foram afetados
+
+## Itens para Fase seguinte (backlog)
+
+- A Fase 7 está completa. Não foram identificados itens adicionais durante a implementação.

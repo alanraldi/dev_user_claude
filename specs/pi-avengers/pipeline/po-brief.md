@@ -1,114 +1,143 @@
-# PO Brief — Fase 7: Pi Avengers
+# PO Brief — Fase 7: Fonte Científica do Pi
 
-**Projeto:** Pi Avengers — página educativa sobre π, tema Marvel/Avengers  
-**Arquivo único:** `index.html` (HTML + CSS + JS inline, sem build, sem dependências externas)  
-**Publicado em:** https://alanraldi.github.io/dev_user_claude/  
-**Data:** 2026-05-11  
-**Status das fases anteriores:** 1–6 concluídas. Não há regressões conhecidas.
+**Data:** 2026-05-12
+**Tarefas cobertas:** Fase 7 — Task: "Incluir fonte científica da variável 'pi'"
+**Arquivo alvo:** `index.html`
 
 ---
 
-## Task 7.1 — Sons Contínuos: Hum do Reator Arc
+## Contexto
 
-### O que é
+O Pi Avengers é uma página educativa single-file que demonstra visualmente os conceitos matemáticos de π: circunferência (C = π × d), área (A = πr²) e a Série de Leibniz. A página já está completa em termos visuais e funcionais — animações, sons, internacionalização PT/EN e modo de apresentação estão implementados.
 
-Enquanto a página estiver aberta e o som estiver ativado, o Reator Arc emite um hum grave e contínuo — como o reactor de energia do Tony Stark em operação. O som deve iniciar assim que o usuário ativar o áudio (botão "SOM") e persistir durante toda a sessão, independente de qual animação está rodando. Quando o usuário silenciar (mesmo botão), o hum para imediatamente.
+A única tarefa pendente da Fase 7 é incluir uma referência científica para a constante π. A ausência dessa referência é uma lacuna educativa: a página ensina com excelência o que π representa geometricamente, mas não informa ao visitante de onde vem o valor numérico 3.14159… nem qual é a fonte acadêmica ou científica que o define. Para uma página com propósito educativo, citar a fonte legitima o conteúdo e aumenta a credibilidade.
+
+A implementação deve seguir o tema visual Avengers/HUD já estabelecido (fundo escuro, fontes Courier New, cores vermelho `#e53935` e dourado `#f5a623`), ser internacionalizada (PT e EN), e residir no rodapé natural da página — após o bloco de dígitos de π que já existe na linha 126 do HTML.
+
+---
+
+## Tarefa 7.3 — Incluir Fonte Científica da Variável "pi"
+
+### Descrição
+
+Adicionar uma pequena seção de "Referências" abaixo do bloco de dígitos de π já existente (`.digits`, linha 126). A seção deve exibir duas referências numeradas e internacionalizadas que identificam a constante π: uma matemática clássica (Wolfram MathWorld ou NIST DLMF) e uma enciclopédica de acesso público (Wikipedia). O texto deve seguir o visual HUD da página e ser atualizado pelo sistema de internacionalização já existente (`T = {pt:{…}, en:{…}}` + `applyLang()`).
 
 ### User Story
 
-Como visitante da página, quero ouvir um hum grave e constante enquanto o Reator Arc está "ligado", para sentir a imersão no universo Avengers e reforçar que o reator está em operação contínua.
+Como visitante que acabou de assistir a animação, quero saber qual é a fonte científica do valor de π, para que eu possa verificar a informação e citar a página com confiança em trabalhos escolares.
 
 ### Critérios de Aceitação
 
-- [ ] O hum inicia quando o usuário clica em "SOM" (muted → unmuted), logo após o beep de confirmação já existente
-- [ ] O hum é um oscilador de baixa frequência (recomendado: 60–90 Hz, tipo `sine` ou `triangle`) com ganho baixo (≤ 0.07) para não sobrepor os sons de eventos
-- [ ] O hum aplica um LFO (Low Frequency Oscillator) de amplitude sutil na frequência ou no ganho, criando variação orgânica (pulsação lenta, ~0.3–0.8 Hz) — sem isso o som fica artificial demais
-- [ ] O hum para instantaneamente quando o usuário clica em "SOM" para silenciar (unmuted → muted)
-- [ ] O hum para quando a aba/página perde o foco (`visibilitychange` → hidden) e retoma quando volta ao foco
-- [ ] Sons de eventos (boot, segment, barTone, complete, mystical) continuam funcionando normalmente sobre o hum — o hum não os abafa
-- [ ] Em dispositivos móveis, o hum só começa após interação do usuário (requisito do browser, já satisfeito pelo fluxo de clique no botão SOM)
-- [ ] O hum não cria loop de feedback (não chama `restart*` nem interfere com as animações canvas)
-- [ ] Ao religar o som após silenciar, o hum retoma junto com o beep de confirmação
+- [ ] Uma seção `<div id="refs">` aparece abaixo do elemento `.digits` (linha 126) com o título "REFERÊNCIAS" (PT) / "REFERENCES" (EN) em estilo HUD
+- [ ] Duas referências são exibidas, numeradas com `[1]` e `[2]`, em fonte Courier New, tamanho `clamp(.62rem, 1.8vw, .72rem)`, cor `#7a8eaa` (mesma do `.explain`)
+- [ ] Referência `[1]` aponta para o Wolfram MathWorld — Pi: `https://mathworld.wolfram.com/Pi.html` — com texto âncora visível e link funcional (abre em nova aba, `target="_blank" rel="noopener"`)
+- [ ] Referência `[2]` aponta para a Wikipedia (versão PT em PT, versão EN em EN): PT → `https://pt.wikipedia.org/wiki/Pi`, EN → `https://en.wikipedia.org/wiki/Pi` — com texto âncora e link funcional
+- [ ] Os textos das referências (rótulos e links) são definidos no objeto `T` do JS, nas chaves `pt` e `en`, e aplicados pela função `applyLang()` via `setHTML()` — nenhum texto de referência está hardcoded em HTML
+- [ ] A seção tem um separador visual sutil acima (linha fina idêntica ao `.hr` existente, mas de largura 100% do container) para delimitar a área de referências
+- [ ] Os links têm a cor dourada `#f5a623` em estado normal e `#e53935` em hover, via CSS inline ou classe utilitária
+- [ ] A seção é visível e legível em mobile (viewport 375px), com quebra de linha natural — nenhum elemento transborda horizontalmente
+- [ ] Ao trocar de idioma (botão PT/EN), os textos e links das referências atualizam corretamente junto com o restante da página
+- [ ] Nenhuma animação canvas, nenhum som e nenhum botão existente são afetados pela adição
 
-### Restrições Técnicas
+### Localização no código
 
-- Deve usar a `Web Audio API` já inicializada em `Sound.ctx` — não criar um segundo `AudioContext`
-- O oscilador do hum deve ser criado como nó persistente (não recriado a cada frame), conectado ao `Sound.ctx.destination`
-- O `Sound.ctx` só pode ser criado/retomado dentro de um evento de usuário — o código atual já garante isso via `Sound.toggle()`; não quebrar esse fluxo
-- Sem dependências externas; sem arquivos de áudio (`.mp3`, `.ogg`) — apenas Web Audio API
-- O volume do hum deve ser controlado via `GainNode` separado para não interferir no ganho dos sons de evento
-- Manter a estrutura do objeto `Sound` já existente — adicionar métodos/propriedades internamente sem alterar a assinatura pública
+- **HTML — onde inserir:** linha 127, imediatamente após o `</div>` que fecha `.digits` (linha 126: `<div class="digits">…</div>`) e antes do `</div>` que fecha `.wrap` (linha 127)
+- **CSS — onde inserir:** dentro do bloco `<style>` existente (linha 7–63), após a linha 63 (antes de `</style>`), com as classes `.refs` e `.refs a`
+- **JS — objeto T:** adicionar as chaves `refTitle`, `ref1`, `ref2` dentro de `pt:{…}` (inicia na linha 134) e `en:{…}` (inicia na linha 152)
+- **JS — função `applyLang()`:** linha 176–188, adicionar chamada `setHTML('refs', ...)` no final do bloco, após a linha 187
+- **Variáveis relacionadas:** `T` (objeto de tradução), `applyLang()`, `setHTML()`, `lang`
+- **Padrão existente a seguir:** o elemento `<div class="digits">` (linha 126) e o `.fcard` (linha 116–119) são os elementos mais próximos visualmente — a seção de referências deve ter aparência mais discreta que o `fcard`, sem borda decorativa de cantos
 
-### Fora do Escopo
+### Conteúdo exato das strings a implementar no objeto `T`
 
-- Variar o timbre ou frequência do hum entre as 3 seções (circunferência, área, Leibniz)
-- Adicionar camadas de som (ex: hum do portal da seção 3 ser diferente do reator) — se desejado, será Fase 8
-- Equalização ou efeitos de reverb/delay
-- Qualquer controle de volume além do botão mute/unmute já existente
+**PT:**
+```
+refTitle: 'REFERÊNCIAS',
+ref1: '[1] Weisstein, Eric W. <a href="https://mathworld.wolfram.com/Pi.html" target="_blank" rel="noopener">Pi — Wolfram MathWorld</a>',
+ref2: '[2] <a href="https://pt.wikipedia.org/wiki/Pi" target="_blank" rel="noopener">Pi — Wikipédia</a>',
+```
 
-### Estimativa de Complexidade
+**EN:**
+```
+refTitle: 'REFERENCES',
+ref1: '[1] Weisstein, Eric W. <a href="https://mathworld.wolfram.com/Pi.html" target="_blank" rel="noopener">Pi — Wolfram MathWorld</a>',
+ref2: '[2] <a href="https://en.wikipedia.org/wiki/Pi" target="_blank" rel="noopener">Pi — Wikipedia</a>',
+```
 
-**Baixa.** A Web Audio API já está inicializada. São ~25–35 linhas de JS adicionadas dentro do objeto `Sound`.
+### HTML a inserir (após a linha 126, antes do `</div>` da `.wrap`)
+
+```html
+<div class="refs">
+  <div class="refs-title" id="refs-title"></div>
+  <div id="refs-body"></div>
+</div>
+```
+
+### CSS a inserir (dentro do `<style>`, após linha 62)
+
+```css
+.refs{width:100%;text-align:center;margin-top:10px;padding-top:10px;border-top:1px solid rgba(229,57,53,.18)}
+.refs-title{font-size:clamp(.55rem,1.6vw,.65rem);letter-spacing:3px;color:rgba(229,57,53,.5);text-transform:uppercase;margin-bottom:6px}
+.refs-body{font-size:clamp(.62rem,1.8vw,.72rem);color:#7a8eaa;line-height:1.8}
+.refs a{color:#f5a623;text-decoration:none}
+.refs a:hover{color:#e53935}
+```
+
+**Nota ao dev:** os IDs corretos no HTML são `refs-title` e `refs-body`. No `applyLang()`, usar `setText('refs-title', l.refTitle)` e `setHTML('refs-body', l.ref1 + '<br>' + l.ref2)`.
+
+### Justificativa da escolha das fontes
+
+| Fonte | Motivo |
+|---|---|
+| Wolfram MathWorld — Pi | Referência matemática rigorosa, peer-reviewed, amplamente citada em trabalhos acadêmicos. Específica para a constante π com definições, fórmulas e histórico. |
+| Wikipedia PT/EN | Acessível ao público geral, multilíngue, cobre o histórico e as definições de forma didática — alinhada ao público-alvo da página (estudantes e curiosos). |
+
+Fontes descartadas por este brief:
+- NIST DLMF: URL complexa e menos familiar ao público não-especialista.
+- Britannica: requer conta para artigos completos.
+
+### Restrições técnicas
+
+- Não criar arquivo CSS separado — o projeto é single-file
+- Não usar CDN nem fontes externas de ícones
+- Não alterar a estrutura dos canvases, dos objetos `Sound`, `T` (exceto adição de chaves), nem das funções `restart1/2/3()`, `tick1/2/3()`, `loop1/2/3()`
+- O bloco `<script>` começa na linha 129 — o HTML da seção de referências deve ser inserido **antes** do `<script>`, dentro do `.wrap`
+- Links externos devem sempre ter `rel="noopener"` por segurança (evita `window.opener` no site de destino)
+- Manter `width: 100%; max-width: 780px` — o `.wrap` já cuida do container, nenhum novo limite de largura é necessário
+
+### Fora do escopo desta tarefa
+
+- Adicionar uma terceira ou quarta referência (ex: livros físicos, artigos de jornal)
+- Criar uma seção "Sobre" ou "Créditos" além das referências
+- Adicionar link para o repositório GitHub na página
+- Alterar o layout do header, dos cards de animação ou dos botões de controle
+- Tocar som ao clicar nos links de referência
+- Qualquer alteração visual nas 3 animações canvas
 
 ---
 
-## Task 7.2 — Modo Apresentação: Navegação por Teclado
+## Dependências entre tarefas
 
-### O que é
+Esta é a única tarefa pendente no backlog. Não há dependência com nenhuma outra tarefa anterior ou futura.
 
-O usuário consegue avançar as fases de cada animação pressionando `Espaço` ou `→` (seta direita) no teclado — como se estivesse em modo de apresentação (semelhante ao PowerPoint). Cada tecla avança para a próxima fase disponível, seguindo a ordem: Seção 1 fase 1→2→3→4→5, depois Seção 2 fase 1→2→3→4→5, depois Seção 3 fase 1→2→3→4→5. Quando todas as fases de todas as seções já foram exibidas, pressionar novamente não faz nada (ou reinicia — ver critérios).
+```
+Fase 7 — Task 7.3: Fonte científica do pi
+  Depende de: nenhuma
+  Bloqueia: nenhuma
+  Ordem de implementação: única
+```
 
-### User Story
+## O que NÃO mudar
 
-Como professor ou apresentador, quero avançar as animações da página com a barra de espaço ou seta do teclado, para conduzir uma apresentação ao vivo sem precisar clicar com o mouse.
+As seguintes funções e blocos devem ser preservados intactos:
 
-### Critérios de Aceita­ção
-
-- [ ] Pressionar `Espaço` ou `ArrowRight` avança a animação ativa para a próxima fase
-- [ ] A ordem de avanço é sequencial entre seções: todas as fases da Seção 1 primeiro, depois Seção 2, depois Seção 3
-- [ ] "Avançar fase" significa pular diretamente para a fase seguinte (`ph1`, `ph2` ou `ph3`) sem esperar o temporizador natural (`t_1`, `t_2`, `t_3`) acabar
-- [ ] O avanço redefine `t_X = 0` e `ph_X++` para que a nova fase rode normalmente a partir do início
-- [ ] Se a animação da seção corrente já completou todas as 5 fases (`done*` = true), o foco passa para a próxima seção
-- [ ] Se todas as 3 seções estiverem completas, pressionar a tecla não faz nada (sem loop infinito)
-- [ ] `ArrowLeft` ou `Backspace` volta uma fase (fase anterior na seção atual; se já for fase 0, volta para a seção anterior no estado de conclusão)
-  - *Nota para o dev:* retroceder é mais complexo que avançar; se o tempo for limitado, entregar apenas o avanço e registrar o retrocesso como Fase 8
-- [ ] O evento de teclado só dispara quando `document.activeElement` não for um `<input>`, `<textarea>` ou `<button>` com foco — para não interferir com acessibilidade
-- [ ] Pressionar `Espaço` não rola a página (`event.preventDefault()` quando o modo apresentação captura a tecla)
-- [ ] O modo de apresentação funciona junto com o toggle de idioma e o botão de som — essas teclas/cliques continuam operacionais
-- [ ] Sons de avanço de fase tocam normalmente ao pular (o som `Sound.boot()` ou o som do segmento correspondente, conforme já acontece ao reiniciar)
-
-### Restrições Técnicas
-
-- Usar `document.addEventListener('keydown', handler)` — apenas um listener global, sem listeners duplicados
-- Não usar `eval()`, não criar variáveis globais desnecessárias além de um objeto/flag de controle de estado
-- As funções `restart1()`, `restart2()`, `restart3()` já existem e devem ser reaproveitadas para reinício; para avançar fase, criar lógica separada que manipula `ph*` e `t_*` diretamente
-- A lógica de avanço deve respeitar os `cancelAnimationFrame` e `requestAnimationFrame` existentes — não criar frames duplicados
-- Manter compatibilidade com mobile: o modo apresentação é funcionalidade exclusiva de teclado (desktop/laptop), sem necessidade de fallback touch nesta fase
-- Arquivo único, zero dependências externas
-
-### Fora do Escopo
-
-- Botões de navegação visíveis na tela (prev/next) — se solicitado, será Fase 8
-- Atalho para reiniciar todas as seções de uma vez
-- Avanço automático com temporizador (autoplay mode)
-- Indicador visual de "modo apresentação ativo" (ex: barra de progresso no rodapé)
-- Suporte a controle remoto de apresentação (Bluetooth/USB) — se necessário, já funciona via `ArrowRight` nativamente no OS
-
-### Estimativa de Complexidade
-
-**Média.** O estado das animações (ph1, ph2, ph3, t_1, t_2, t_3, done1, done2, done3) está em variáveis globais e pode ser manipulado diretamente. O principal cuidado é garantir que os `requestAnimationFrame` em andamento não se multipliquem. ~40–60 linhas de JS.
-
----
-
-## Dependências entre Tasks
-
-As duas tasks são independentes entre si. Podem ser implementadas em paralelo ou em qualquer ordem. Nenhuma delas altera HTML ou CSS — são adições puramente em JavaScript dentro do bloco `<script>`.
-
-## Critérios de "Pronto" (Definition of Done)
-
-- Testado no Chrome e Firefox desktop
-- Testado no Chrome mobile (iOS ou Android) — especialmente que o hum não toca sozinho sem interação
-- Nenhuma das 3 animações canvas apresenta regressão visual
-- Botão SOM, toggle PT/EN e botões "Repetir" continuam funcionando
-- Commit no branch `main` com descrição clara
-- Deploy verificado no GitHub Pages: https://alanraldi.github.io/dev_user_claude/
+- `Sound` — objeto completo com hum, LFO, toggle, beeps e fanfare
+- `restart1()`, `tick1()`, `loop1()` — animação da circunferência
+- `restart2()`, `tick2()`, `loop2()` — animação da área
+- `restart3()`, `tick3()`, `loop3()` — animação da série de Leibniz
+- `_advanceSection()`, `_rewindSection()` — modo apresentação por teclado
+- `applyLang()` — pode receber linhas adicionais no final, mas as linhas existentes (178–187) não devem ser alteradas
+- `T.pt.f1/f2/f3`, `T.pt.e1/e2/e3`, `T.en.f1/f2/f3`, `T.en.e1/e2/e3` — strings de narração FRIDAY e WONG
+- Todo o CSS existente nas linhas 8–62
+- Estrutura do HTML das seções 1, 2 e 3 (cards, canvases, badges, explain)
+- `<div class="digits">` — linha 126, não alterar conteúdo
